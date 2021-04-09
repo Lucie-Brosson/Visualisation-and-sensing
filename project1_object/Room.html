@@ -19,30 +19,15 @@
       <div = "grid_item">
         <a href="Room.html" target="_self">Room</a>
       </div>
-      <div = "grid_item">
-        <a href="test.html" target="_self">test</a>
-      </div>
     </div>
 
-    <svg width=500 height=300>
-      <circle />
-      <circle />
-      <circle />
-      <circle />
-      <circle />
-    </svg>
-    <span class="status"></span>
+    <script >
 
-    <script>
-    d3.selectAll('circle')
-      .style('fill', 'orange')
-      .attr('r', function(){
-        return 10 + Math.random() * 30
-      })
-      .attr('cx', function(d, i) {
-        return (i * 80) + 50
-      })
-      .attr('cy', 150)
+      d3.csv ('family.csv')
+        .then(function(data) {
+          return data.map (d=> ({Room: d.room, number_of_time_entered : d.entered}))
+        })
+
     </script>
 
 

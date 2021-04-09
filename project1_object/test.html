@@ -1,0 +1,82 @@
+<html>
+  <head>
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <style>
+      rect {
+        fill: steelblue;
+      }
+      rect:hover {
+        fill: orange;
+      }
+      text {
+        text-anchor: end;
+      }
+    </style>
+  </head>
+  <body>
+    <div class = "grid_container">
+      <div = "grid_item">
+        <a href="Category_object.html" target="_self">Object category</a>
+      </div>
+      <div = "grid_item">
+        <a href="Link_to_me.html" target="_self">Link to me</a>
+      </div>
+      <div = "grid_item">
+        <a href="Room.html" target="_self">Room</a>
+      </div>
+      <div = "grid_item">
+        <a href="test.html" target="_self">test</a>
+      </div>
+    </div>
+    
+    <svg width=760 height=140>
+      <g transform="translate(100, 30)">
+        <rect />
+        <rect />
+        <rect />
+        <rect />
+        <rect />
+      </g>
+      <g transform="translate(100, 30)">
+        <text />
+        <text />
+        <text />
+        <text />
+        <text />
+      </g>
+    </svg>
+    <script>
+      var cities = [
+        { name: 'London', population: 8674000},
+        { name: 'New York', population: 8406000},
+        { name: 'Sydney', population: 4293000},
+        { name: 'Paris', population: 2244000},
+        { name: 'Beijing', population: 11510000}
+      ];
+
+      d3.selectAll('rect')
+        .data(cities)
+        .attr('height', 19)
+        .attr('width', function(d) {
+          var scaleFactor = 0.00004;
+          return d.population * scaleFactor;
+        })
+        .attr('y', function(d, i) {
+          return i * 20;
+        })
+
+      d3.selectAll('text')
+        .data(cities)
+        .attr('y', function(d, i) {
+          return i * 20 + 13;
+        })
+        .attr('x', -4)
+        .text(function(d) {
+          return d.name;
+        });
+
+
+    </script>
+  </body>
+
+</html>

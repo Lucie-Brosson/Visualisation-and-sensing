@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Object</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+
+    <style>
+      rect {
+        fill: red;
+      }
+      rect:hover {
+        fill: yellow;
+      }
+      text {
+        text-anchor: end;
+      }
+    </style>
+
+  </head>
+
+  <body>
+
+    <h1> A home - story of object </h1>
+    <div class = "grid_container">
+      <div = "grid_item">
+        <a href="Category_object.html" target="_self">Object category</a>
+      </div>
+      <div = "grid_item">
+        <a href="Link_to_me.html" target="_self">Link to me</a>
+      </div>
+      <div = "grid_item">
+        <a href="Room.html" target="_self">Room</a>
+      </div>
+    </div>
+
+    <svg width=500 height=240>
+        <g transform="translate(250, 30)">
+          <rect />
+          <rect />
+          <rect />
+          <rect />
+          <rect />
+          <rect />
+          <rect />
+          <rect />
+        </g>
+        <g transform="translate(250, 30)">
+          <text />
+          <text />
+          <text />
+          <text />
+          <text />
+          <text />
+          <text />
+          <text />
+        </g>
+      </svg>
+      <script>
+        var object_link = [
+          { name: 'Sentimental, Inseparable', number_of_object: 8674000},
+          { name: 'Utility, need it', number_of_object: 8406000},
+          { name: 'Like it', number_of_object: 4293000},
+          { name: 'Could live without', number_of_object: 2244000},
+          { name: 'In case of', number_of_object: 11510000},
+          { name: 'Work/project/important paper', number_of_object: 11510000},
+          { name: 'Stock', number_of_object: 11510000},
+          { name: 'Want to get ride off it', number_of_object: 11510000}
+        ];
+
+        d3.selectAll('rect')
+          .data(object_link)
+          .attr('height', 19)
+          .attr('width', function(d) {
+            var scaleFactor = 0.00004;
+            return d.number_of_object * scaleFactor;
+          })
+          .attr('y', function(d, i) {
+            return i * 20;
+          })
+
+        d3.selectAll('text')
+          .data(object_link)
+          .attr('y', function(d, i) {
+            return i * 20 + 13;
+          })
+          .attr('x', -4)
+          .text(function(d) {
+            return d.name;
+          });
+
+        d3.csv('Life data CVS.csv')
+        .then(function (data) {
+          return data.map(d => ({ time: new Date(d.time * 1000), ldr: d.ldr }))
+        })
+        .then(function (formattedData) {
+          makeGraph(formattedData)
+        })
+
+
+      </script>
+
+
+  </body>
+</html>
