@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Object</title>
-    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="../API-library/d3/d3.js"></script>
 
     <style>
       rect {
@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <svg width=500 height=240>
+    <svg width=800 height=240>
         <g transform="translate(250, 30)">
           <rect />
           <rect />
@@ -88,19 +88,20 @@
             return d.name;
           });
 
-        d3.csvParse(await FileAttachment('Life data CVS.csv'))
+        console.log('blikbp')
+
+        d3.csv('Life-data-CVS.csv')
+
           .then(function (data) {
-            var filteredData = consdata.filter(function(d){
-              if (d["Link"]=="1"){
-                return d
-              }
-            })
+            return data
+            return 'heloo'
+            console.log ('ipbfhagbpiurgb')
 
           })
           .then(function (formattedData) {
             makeGraph(formattedData)
           })
-
+        console.log ('hello')
 
 
 
