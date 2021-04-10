@@ -88,13 +88,20 @@
             return d.name;
           });
 
-        d3.csv('Life data CVS.csv')
-        .then(function (data) {
-          return data.map(d => ({ time: new Date(d.time * 1000), ldr: d.ldr }))
-        })
-        .then(function (formattedData) {
-          makeGraph(formattedData)
-        })
+        d3.csvParse(await FileAttachment('Life data CVS.csv'))
+          .then(function (data) {
+            var filteredData = consdata.filter(function(d){
+              if (d["Link"]=="1"){
+                return d
+              }
+            })
+
+          })
+          .then(function (formattedData) {
+            makeGraph(formattedData)
+          })
+
+
 
 
       </script>
