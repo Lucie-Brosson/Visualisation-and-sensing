@@ -1,19 +1,26 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <script src="https://d3js.org/d3.v5.js"></script>
+    <title>Object</title>
+    <script src="../API-library/d3/d3.js"></script>
+
     <style>
       rect {
-        fill: steelblue;
+        fill: red;
       }
       rect:hover {
-        fill: orange;
+        fill: yellow;
       }
       text {
         text-anchor: end;
       }
     </style>
+
   </head>
+
   <body>
+
+    <h1> A home - story of object </h1>
     <div class = "grid_container">
       <div = "grid_item">
         <a href="Category_object.html" target="_self">Object category</a>
@@ -24,59 +31,154 @@
       <div = "grid_item">
         <a href="Room.html" target="_self">Room</a>
       </div>
-      <div = "grid_item">
-        <a href="test.html" target="_self">test</a>
-      </div>
     </div>
-    
-    <svg width=760 height=140>
-      <g transform="translate(100, 30)">
-        <rect />
-        <rect />
-        <rect />
-        <rect />
-        <rect />
-      </g>
-      <g transform="translate(100, 30)">
-        <text />
-        <text />
-        <text />
-        <text />
-        <text />
-      </g>
-    </svg>
-    <script>
-      var cities = [
-        { name: 'London', population: 8674000},
-        { name: 'New York', population: 8406000},
-        { name: 'Sydney', population: 4293000},
-        { name: 'Paris', population: 2244000},
-        { name: 'Beijing', population: 11510000}
-      ];
 
-      d3.selectAll('rect')
-        .data(cities)
-        .attr('height', 19)
-        .attr('width', function(d) {
-          var scaleFactor = 0.00004;
-          return d.population * scaleFactor;
-        })
-        .attr('y', function(d, i) {
-          return i * 20;
-        })
+    <svg width=800 height=240>
+        <g transform="translate(250, 30)">
+          <rect />
+          <rect />
+          <rect />
+          <rect />
+          <rect />
+          <rect />
+          <rect />
+          <rect />
+        </g>
+        <g transform="translate(250, 30)">
+          <text />
+          <text />
+          <text />
+          <text />
+          <text />
+          <text />
+          <text />
+          <text />
+        </g>
+      </svg>
+      <script>
+        console.log('Iam here first ')
 
-      d3.selectAll('text')
-        .data(cities)
-        .attr('y', function(d, i) {
-          return i * 20 + 13;
-        })
-        .attr('x', -4)
-        .text(function(d) {
-          return d.name;
+        let sentimental = 0;
+        var need_it = 0;
+        var like_it = 0;
+        var could_live_without = 0;
+        var in_case = 0;
+        var Work_project = 0;
+        var stock = 0;
+        var rid_of = 0;
+
+
+        var object_link = [
+          { name: 'Sentimental, Inseparable', number_of_object: sentimental},
+          { name: 'Utility, need it', number_of_object: need_it},
+          { name: 'Like it', number_of_object: like_it},
+          { name: 'Could live without', number_of_object: could_live_without},
+          { name: 'In case of', number_of_object: in_case},
+          { name: 'Work/project', number_of_object: Work_project},
+          { name: 'Stock', number_of_object: stock},
+          { name: 'Want to get rid off it', number_of_object: rid_of}
+        ];
+
+        d3.selectAll('rect')
+          .data(object_link)
+          .attr('height', 19)
+          .attr('width', function(d) {
+            var scaleFactor = 0.00004;
+            return d.number_of_object * scaleFactor;
+          })
+          .attr('y', function(d, i) {
+            return i * 20;
+          })
+
+        d3.selectAll('text')
+          .data(object_link)
+          .attr('y', function(d, i) {
+            return i * 20 + 13;
+          })
+          .attr('x', -4)
+          .text(function(d) {
+            return d.name;
+          });
+
+        console.log('blikbp');
+
+        // I made the list before rearanging the value, the value are in different place here and can be a bit confusing
+
+
+
+
+      /*  d3.csv('Life-data-CVS.csv')
+          .then(function (data) {
+
+            return data.map(d => ({
+              object: d.object,
+              room: d.room,
+              number_of_item: d.number_of_item,
+              link_to_me: d.link_to_me,
+              category: d.category,
+              is_it_decoration: d.is_it_decoration
+            }));
+
+            console.log ('ipbfhagbpiurgb');
+
+            data
+          });
+
+          .then(function (formattedData) {
+         make_calculation(formattedData)
+       });*/
+
+
+
+
+        d3.csv('Life-data-CVS.csv',function (data){
+
+          console.log('cvs place')
+
+          sentimental=sentimental+ 25;
+
+          for (var i = 0; i < data.lenght; i++){
+            if (data[i].link_to_me == 1) {
+              sentimental++;
+              console.log(sentimental)
+              console.log('sentimental')
+            }
+            if (d.link_to_me == 2) {
+              need_it++;
+              console.log('need it ')
+
+            }
+            if (d.link_to_me == 3) {
+              like_it++;
+            }
+            if (d.link_to_me == 4) {
+              could_live_without++;
+            }
+            if (d.link_to_me == 5) {
+              stock++;
+            }
+            if (d.link_to_me == 6) {
+              rid_of++;
+            }
+            if (d.link_to_me == 7) {
+              in_case++;
+            }
+            if (d.link_to_me == 8) {
+              Work_project++;
+            }
+
+          };
+
         });
 
 
-    </script>
-  </body>
 
+        console.log ('hello');
+
+      // Ce quii reste à faire : trier les datas 
+
+      </script>
+
+
+  </body>
 </html>
