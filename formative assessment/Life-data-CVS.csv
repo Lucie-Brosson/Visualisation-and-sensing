@@ -1,4 +1,4 @@
-objet ,Room ,number,Link ,object category,decoration
+object ,room ,number_of_item ,link_to_me ,category ,is_it_decoration
 doudou,Bedroom ,3,1,plush ,
 lamp,desk ,1,2,lamp,
 lamp ,Bedroom ,1,2,lamp ,
@@ -55,3 +55,17 @@ Dice ,desk ,35,7,game,
 Marron ,desk ,6,4,other ,x
 dino rubber,desk ,1,4,other ,x
 red cat ,desk ,1,6,other ,x
+t-shirt,wardrob,5,3,clothe,
+t-shirt,wardrob,8,4,clothe,
+t-shirt,wardrob,3,6,clothe,
+legging,wardrob ,1,3,clothe,
+legging,wardrob,3,4,clothe,
+legging,wardrob,1,6,clothe,
+pyjama,wardrob,2,2,clothe,
+pyjama,wardrob,3,6,clothe,
+underwear,wardrob ,10,2,clothe,
+underwear,wardrob,8,4,clothe,
+underwear,wardrob,2,6,clothe,
+bra,wardrob,4,2,clothe,
+bra,wardrob,1,2,clothe,
+socks,wardrob,33,3,clothe,

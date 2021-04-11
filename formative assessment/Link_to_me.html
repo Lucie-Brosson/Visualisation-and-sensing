@@ -56,15 +56,25 @@
         </g>
       </svg>
       <script>
+
+        var Sentimental = 0;
+        var need_it = 0;
+        var like_it = 0;
+        var could_live_without = 0;
+        var in_case = 0;
+        var Work_project = 0;
+        var stock = 0;
+        var ride_of = 0;
+
         var object_link = [
-          { name: 'Sentimental, Inseparable', number_of_object: 8674000},
-          { name: 'Utility, need it', number_of_object: 8406000},
-          { name: 'Like it', number_of_object: 4293000},
-          { name: 'Could live without', number_of_object: 2244000},
-          { name: 'In case of', number_of_object: 11510000},
-          { name: 'Work/project/important paper', number_of_object: 11510000},
-          { name: 'Stock', number_of_object: 11510000},
-          { name: 'Want to get ride off it', number_of_object: 11510000}
+          { name: 'Sentimental, Inseparable', number_of_object_1: Sentimental},
+          { name: 'Utility, need it', number_of_object_2: need_it},
+          { name: 'Like it', number_of_object_3: like_it},
+          { name: 'Could live without', number_of_object_4: could_live_without},
+          { name: 'In case of', number_of_object_5: in_case},
+          { name: 'Work/project', number_of_object_6: Work_project},
+          { name: 'Stock', number_of_object_7: stock},
+          { name: 'Want to get ride off it', number_of_object_8: ride_of}
         ];
 
         d3.selectAll('rect')
@@ -88,17 +98,61 @@
             return d.name;
           });
 
-        console.log('blikbp')
+        console.log('blikbp');
 
-        d3.csv('Life-data-CVS.csv')
+        // I made the list before rearanging the value, the value are in different place here and can be a bit confusing
 
-          .then(function (data) {
+        function make_calculation(item){
+          if (d.link_to_me == 1) {
+            sentimental++;
+          }
+          if (d.link_to_me == 2) {
+            need_it++;
+          }
+          if (d.link_to_me == 3) {
+            like_it++;
+          }
+          if (d.link_to_me == 4) {
+            could_live_without++;
+          }
+          if (d.link_to_me == 5) {
+            stock++;
+          }
+          if (d.link_to_me == 6) {
+            ride_of++;
+          }
+          if (d.link_to_me == 7) {
+            in_case++;
+          }
+          if (d.link_to_me == 8) {
+            Work_project++;
+          }
+        };
 
-            console.log ('ipbfhagbpiurgb')
+        d3.csv(FileAttachment('Life-data-CVS.csv').autotype)
+          .then(function (item) {
 
-          })
+            return item.map(d=> ({
+              object : d.object,
+              room : d.room,
+              number_of_item : d.number_of_item,
+              link_to_me : d.link_to_me,
+              category : d.category,
+              is_it_decoration : d.is_it_decoration
+            }));
 
-        console.log ('hello')
+            console.log ('ipbfhagbpiurgb');
+          });
+
+          .then(function (formattedData){
+            make_calculation (formattedData);
+            console.log('I ma printing')
+          });
+
+
+
+
+        console.log ('hello');
 
 
 
