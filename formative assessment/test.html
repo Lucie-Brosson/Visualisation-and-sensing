@@ -3,6 +3,8 @@
   <head>
     <title>Object</title>
     <script src="../API-library/d3/d3.js"></script>
+    <script src="../API-library\d3\d3.min.js"></script>
+    <script src="https://d3js.org/d3.v6.js"></script>
 
     <style>
       rect {
@@ -55,6 +57,11 @@
           <text />
         </g>
       </svg>
+      <script src="../API-library/d3/d3.js"></script>
+      <script src="../API-library\d3\d3.min.js"></script>
+
+      <script src="https://d3js.org/d3.v6.js"></script>
+
       <script>
         console.log('Iam here first ')
 
@@ -100,50 +107,19 @@
             return d.name;
           });
 
-        console.log('blikbp');
 
-        // I made the list before rearanging the value, the value are in different place here and can be a bit confusing
+        function make_calculation(data){
+          console.log('blikbp');
 
+          for (var i = 0; i < 70; i++){
+            console.log('printing for');
 
-
-
-      /*  d3.csv('Life-data-CVS.csv')
-          .then(function (data) {
-
-            return data.map(d => ({
-              object: d.object,
-              room: d.room,
-              number_of_item: d.number_of_item,
-              link_to_me: d.link_to_me,
-              category: d.category,
-              is_it_decoration: d.is_it_decoration
-            }));
-
-            console.log ('ipbfhagbpiurgb');
-
-            data
-          });
-
-          .then(function (formattedData) {
-         make_calculation(formattedData)
-       });*/
-
-
-
-
-        d3.csv('Life-data-CVS.csv',function (data){
-
-          console.log('cvs place')
-
-          sentimental=sentimental+ 25;
-
-          for (var i = 0; i < data.lenght; i++){
-            if (data[i].link_to_me == 1) {
+            if (link_to_me == 1) {
               sentimental++;
               console.log(sentimental)
               console.log('sentimental')
             }
-            if (d.link_to_me == 2) {
+            /*if (d.link_to_me == 2) {
               need_it++;
               console.log('need it ')
 
@@ -165,17 +141,50 @@
             }
             if (d.link_to_me == 8) {
               Work_project++;
-            }
+            }*/
 
           };
+        }
 
-        });
+        // I made the list before rearanging the value, the value are in different place here and can be a bit confusing
+
+
+        d3.csv('Life-data-CVS.csv').then (function (d){
+
+          link_to_me = +d.link_to_me
+          make_calculation(link_to_me)
+
+          console.log(d[0]);
+          console.log(link_to_me);
+        })
+      //  d3.csvParse(await FileAttachment("Life-data-CVS.csv").text())
+        /*.then csvParseRows()
+          .then(function (data) {
+
+            console.log ('1st funcijnvrzekgton');
+
+
+            link_me = data.map(d => ({
+              link_to_me: +d.link_to_me
+            }));
+            console.log (link_me);
+
+            console.log ('1st funciton');
+          })
+
+          .then(function (link_me) {
+            console.log ('make calculation 1 st')
+
+           make_calculation(link_me)
+           console.log ('make calculation')
+
+         })*/
 
 
 
         console.log ('hello');
 
-      // Ce quii reste à faire : trier les datas 
+      // Ce quii reste à faire : trier les datas
 
       </script>
 
