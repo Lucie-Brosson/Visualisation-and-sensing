@@ -108,6 +108,29 @@
             return d.name;
           });
 
+          d3.csv("Life data CSV 2.csv")
+                 .then (function (data) {
+                    let newData = data.map(d => ({
+                     object : d.objet,
+                     room : d.Room,
+                     number_of_item : +d.number,
+                     link_to_me : +d.Link,
+                     category : d.Category,
+                     is_it_decoration : d.is_it_decoration
+                   }))
+                   console.log('ata hello');
+
+                   console.log(data);
+                   console.log(newData);
+
+                   console.log('data');
+
+                 //...
+                 return newData              // <-- Make sure to return so it gets passed to the next .then
+                 })
+                 .then(function (data) {
+                     make_calculation(data)  // <-- Passing the data on
+                 })
 
           // I made the list before rearanging the value, the value are in different place here and can be a bit confusing
 
@@ -117,32 +140,33 @@
           for (var i = 0; i < 70; i++){
             console.log('printing for');
 
-            if (link_to_me == 1) {
+            if (data.link_to_me = "1") {
               sentimental++;
-              console.log(sentimental)
+              console.log(data.link_to_me)
               console.log('sentimental')
             }
-            if (d.link_to_me == 2) {
+            if (data.link_to_me = "2") {
               need_it++;
+
               console.log('need it ')
 
             }
-            if (d.link_to_me == 3) {
+            if (data.link_to_me = "3") {
               like_it++;
             }
-            if (d.link_to_me == 4) {
+            if (data.link_to_me = "4") {
               could_live_without++;
             }
-            if (d.link_to_me == 5) {
+            if (data.link_to_me = "5") {
               stock++;
             }
-            if (d.link_to_me == 6) {
+            if (data.link_to_me = "6") {
               rid_of++;
             }
-            if (d.link_to_me == 7) {
+            if (data.link_to_me ="7") {
               in_case++;
             }
-            if (d.link_to_me == 8) {
+            if (data.link_to_me ="8") {
               Work_project++;
             }
 
@@ -151,27 +175,6 @@
 
 
 
-        d3.csv("Life data CSV 2.csv")
-        .then (function (data) {
-
-           data.map(d => ({
-            object : d.objet,
-            room : d.Room,
-            number_of_item : +d.number,
-            link_to_me : +d.Link,
-            category : d.Category,
-            is_it_decoration : d.is_it_decoration
-          }))
-
-          console.log(d[0]);
-          console.log(d);
-
-          console.log(object);
-
-          console.log(link_to_me);
-          console.log(number_of_item);
-
-        });
 
 
 
