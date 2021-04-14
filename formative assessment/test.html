@@ -64,39 +64,17 @@
 
 
       <script>
-        console.log('Iam here first ')
-
-        let sentimental = 0;
-        var need_it = 0;
-        var like_it = 0;
-        var could_live_without = 0;
-        var in_case = 0;
-        var Work_project = 0;
-        var stock = 0;
-        var rid_of = 0;
-
 
         var object_link = [
-          { name: 'Sentimental, Inseparable', number_of_object: sentimental},
-          { name: 'Utility, need it', number_of_object: need_it},
-          { name: 'Like it', number_of_object: like_it},
-          { name: 'Could live without', number_of_object: could_live_without},
-          { name: 'In case of', number_of_object: in_case},
-          { name: 'Work/project', number_of_object: Work_project},
-          { name: 'Stock', number_of_object: stock},
-          { name: 'Want to get rid off it', number_of_object: rid_of}
+          { name: 'Sentimental, Inseparable',count : 3},
+          { name: 'Utility, need it',count : 8},
+          { name: 'Like it',count : 33},
+          { name: 'Could live without',count : 7},
+          { name: 'In case of',count : 1},
+          { name: 'Work/project',count : 1},
+          { name: 'Stock',count : 1},
+          { name: 'Want to get rid off it',count : 3}
         ];
-
-        d3.selectAll('rect')
-          .data(object_link)
-          .attr('height', 19)
-          .attr('width', function(d) {
-            var scaleFactor = 0.00004;
-            return d.number_of_object * scaleFactor;
-          })
-          .attr('y', function(d, i) {
-            return i * 20;
-          })
 
         d3.selectAll('text')
           .data(object_link)
@@ -108,72 +86,66 @@
             return d.name;
           });
 
+
+
           d3.csv("Life data CSV 2.csv")
-                 .then (function (data) {
-                    let newData = data.map(d => ({
-                     object : d.objet,
-                     room : d.Room,
-                     number_of_item : +d.number,
-                     link_to_me : +d.Link,
-                     category : d.Category,
-                     is_it_decoration : d.is_it_decoration
-                   }))
-                   console.log('ata hello');
+             .then (function (data) {
+               let newData = data.map(d => ({
+                 object : d.objet,
+                 room : d.Room,
+                 number_of_item : +d.number,
+                 link_to_me : +d.Link,
+                 category : d.Category,
+                 is_it_decoration : d.is_it_decoration
+               }));
 
-                   console.log(data);
-                   console.log(newData);
+               return newData;
+             })
+             .then(function (data) {
+               let sort_link = data.sort((a, b) => d3.ascending(a.link_to_me, b.link_to_me));
 
-                   console.log('data');
+               let count_sorted_link = d3.group(sort_link, d => d.link_to_me);
 
-                 //...
-                 return newData              // <-- Make sure to return so it gets passed to the next .then
-                 })
-                 .then(function (data) {
-                     make_calculation(data)  // <-- Passing the data on
-                 })
+               let test1 = d3.rollup(sort_link, v => v.length, d=> d.link_to_me)
 
-          // I made the list before rearanging the value, the value are in different place here and can be a bit confusing
+               let test2 = (Array.from(test1))
 
-        function make_calculation(data){
-          console.log('blikbp');
 
-          for (var i = 0; i < 70; i++){
-            console.log('printing for');
 
-            if (data.link_to_me = "1") {
-              sentimental++;
-              console.log(data.link_to_me)
-              console.log('sentimental')
-            }
-            if (data.link_to_me = "2") {
-              need_it++;
+               console.log (sort_link)
+               console.log (count_sorted_link)
+               console.log(test1)
+              console.log (test2)
 
-              console.log('need it ')
 
-            }
-            if (data.link_to_me = "3") {
-              like_it++;
-            }
-            if (data.link_to_me = "4") {
-              could_live_without++;
-            }
-            if (data.link_to_me = "5") {
-              stock++;
-            }
-            if (data.link_to_me = "6") {
-              rid_of++;
-            }
-            if (data.link_to_me ="7") {
-              in_case++;
-            }
-            if (data.link_to_me ="8") {
-              Work_project++;
-            }
+              return test2
 
-          };
+             })
+             .then(function(data){
+               console.log(data)
+               draw_rect(data)
+             })
+
+
+
+        function draw_rect(data){
+          console.log(data)
+
+         d3.selectAll('rect')
+               .data(data)
+               .attr('height', 19)
+               .attr('width', function(d){
+
+                   var scaleFactor = 10;
+
+                   console.log(d.length)
+                   return d.data* scaleFactor;
+               })
+
+               .attr('y', function(d, i) {
+                 return i * 20;
+               })
         }
-
-
 
 
 

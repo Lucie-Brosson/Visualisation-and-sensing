@@ -3,6 +3,8 @@
   <head>
     <title>Object</title>
     <script src="../API-library/d3/d3.js"></script>
+    <script src="../API-library\d3\d3.min.js"></script>
+    <script src="https://d3js.org/d3.v6.js"></script>
 
     <style>
       rect {
@@ -55,38 +57,24 @@
           <text />
         </g>
       </svg>
+      <script src="../API-library/d3/d3.js"></script>
+      <script src="../API-library\d3\d3.min.js"></script>
+
+      <script src="https://d3js.org/d3.v6.js"></script>
+
+
       <script>
 
-        var Sentimental = 0;
-        var need_it = 0;
-        var like_it = 0;
-        var could_live_without = 0;
-        var in_case = 0;
-        var Work_project = 0;
-        var stock = 0;
-        var ride_of = 0;
-
         var object_link = [
-          { name: 'Sentimental, Inseparable', number_of_object_1: Sentimental},
-          { name: 'Utility, need it', number_of_object_2: need_it},
-          { name: 'Like it', number_of_object_3: like_it},
-          { name: 'Could live without', number_of_object_4: could_live_without},
-          { name: 'In case of', number_of_object_5: in_case},
-          { name: 'Work/project', number_of_object_6: Work_project},
-          { name: 'Stock', number_of_object_7: stock},
-          { name: 'Want to get ride off it', number_of_object_8: ride_of}
+          { name: 'Sentimental, Inseparable',count : 3},
+          { name: 'Utility, need it',count : 8},
+          { name: 'Like it',count : 33},
+          { name: 'Could live without',count : 7},
+          { name: 'In case of',count : 1},
+          { name: 'Work/project',count : 1},
+          { name: 'Stock',count : 1},
+          { name: 'Want to get rid off it',count : 3}
         ];
-
-        d3.selectAll('rect')
-          .data(object_link)
-          .attr('height', 19)
-          .attr('width', function(d) {
-            var scaleFactor = 0.00004;
-            return d.number_of_object * scaleFactor;
-          })
-          .attr('y', function(d, i) {
-            return i * 20;
-          })
 
         d3.selectAll('text')
           .data(object_link)
@@ -98,61 +86,63 @@
             return d.name;
           });
 
-        console.log('blikbp');
 
-        // I made the list before rearanging the value, the value are in different place here and can be a bit confusing
 
-        function make_calculation(item){
-          if (d.link_to_me == 1) {
-            sentimental++;
-          }
-          if (d.link_to_me == 2) {
-            need_it++;
-          }
-          if (d.link_to_me == 3) {
-            like_it++;
-          }
-          if (d.link_to_me == 4) {
-            could_live_without++;
-          }
-          if (d.link_to_me == 5) {
-            stock++;
-          }
-          if (d.link_to_me == 6) {
-            ride_of++;
-          }
-          if (d.link_to_me == 7) {
-            in_case++;
-          }
-          if (d.link_to_me == 8) {
-            Work_project++;
-          }
-        };
+          d3.csv("Life data CSV 2.csv")
+             .then (function (data) {
+               let newData = data.map(d => ({
+                 object : d.objet,
+                 room : d.Room,
+                 number_of_item : +d.number,
+                 link_to_me : +d.Link,
+                 category : d.Category,
+                 is_it_decoration : d.is_it_decoration
+               }));
 
-        d3.csv(FileAttachment('Life-data-CVS.csv').autotype)
-          .then(function (item) {
+               return newData;
+             })
+             .then(function (data) {
+               let sort_link = data.sort((a, b) => d3.ascending(a.link_to_me, b.link_to_me));
 
-            return item.map(d=> ({
-              object : d.object,
-              room : d.room,
-              number_of_item : d.number_of_item,
-              link_to_me : d.link_to_me,
-              category : d.category,
-              is_it_decoration : d.is_it_decoration
-            }));
+               let count_sorted_link = d3.group(sort_link, d => d.link_to_me);
 
-            console.log ('ipbfhagbpiurgb');
-          });
+               let test1 = d3.rollup(sort_link, v => v.length, d=> d.link_to_me)
 
-          .then(function (formattedData){
-            make_calculation (formattedData);
-            console.log('I ma printing')
-          });
+               let test2 = (Array.from(test1))
+
+               console.log (sort_link)
+               console.log (count_sorted_link)
+               console.log(test1)
+              console.log (test2)
+
+
+              return test2
+
+             })
+             .then(function(data){
+               console.log(data)
+               draw_rect(data)
+             })
 
 
 
+        function draw_rect(data){
 
-        console.log ('hello');
+          console.log(data)
+
+
+         d3.selectAll('rect')
+               .data(object_link)
+               .attr('height', 19)
+               .attr('width', function(d){
+                   var scaleFactor = 10;
+                   return d.count* scaleFactor;
+               })
+               .attr('y', function(d, i) {
+                 return i * 20;
+               })
+        }
+
 
 
 
