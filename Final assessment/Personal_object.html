@@ -3,49 +3,99 @@
   <head>
     <meta charset = 'utf-8' />
     <title>Personal Object</title>
-    <style>
-			body { margin: 0; }
-		</style>
+
+    <link rel="stylesheet" href="./Personal_object.css">
+    <script src=".\js\three\build\three.js"></script>
+    <script src=".\API-library\d3\d3.js"></script>
+
+    API-library\d3\d3.js
+
+
+
 
   </head>
 
   <body>
 
-    <script src="js/three.js"></script>
-  	<script>
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-
-      const renderer = new THREE.WebGLRenderer();
-      renderer.setSize( window.innerWidth, window.innerHeight );
-      document.body.appendChild( renderer.domElement );
-
-      const geometry = new THREE.BoxGeometry();
-      const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-      const cube = new THREE.Mesh( geometry, material );
-      scene.add( cube );
-
-      const texture = new THREE.TextureLoader().load( "textures/water.jpg" );
-      texture.wrapS = THREE.RepeatWrapping;
-      texture.wrapT = THREE.RepeatWrapping;
-      texture.repeat.set( 4, 4 );
 
 
-      function animate() {
-      	requestAnimationFrame( animate );
-        cube.rotation.x += 0.01;
-        cube.rotation.y += 0.01;
-      	renderer.render( scene, camera );
-      }
-      animate();
+   <canvas id="c"> </canvas>
+
+   <script>
+
+// Annalyse the data and seperates it
+// TO do  : create different function depending what I want
+// Room -> category -> link to me Attention for the number of object will need to multiply
+
+   d3.csv("Life_data.csv")
+      .then (function (data) {
+        let newData = data.map(d => ({
+          object : d.objet,
+          room : d.Room,
+          number_of_item : +d.number,
+          link_to_me : +d.Link,
+          category : d.Category,
+          is_it_decoration : d.is_it_decoration
+        }));
+
+        return newData;
+      })
+      .then(function (data) {
+        let sort_link = data.sort((a, b) => d3.ascending(a.link_to_me, b.link_to_me));
+
+        let count_sorted_link = d3.group(sort_link, d => d.link_to_me);
+
+        let test1 = d3.rollup(sort_link, v => v.length, d=> d.link_to_me)
+
+        let test2 = (Array.from(test1))
+
+        console.log (sort_link)
+        console.log (count_sorted_link)
+        console.log(test1)
+        console.log (test2)
+
+       return test2
+      })
+
+// 3D sketch
+
+
+   function main() {
+     const canvas = document.querySelector('#c');
+     const renderer = new THREE.WebGLRenderer({canvas});
+
+     const fov = 75;
+     const aspect = 2;  // the canvas default
+     const near = 0.1;
+     const far = 5;
+     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+     camera.position.z = 2;
+
+     const scene = new THREE.Scene();
+
+     const boxWidth = 1;
+     const boxHeight = 1;
+     const boxDepth = 1;
+     const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
+
+     const material = new THREE.MeshBasicMaterial({color: 0x44aa88});  // greenish blue
+
+     const cube = new THREE.Mesh(geometry, material);
+     scene.add(cube);
+
+     renderer.render(scene, camera);
+   }
+
+   main();aterial = new THREE.MeshBasicMaterial({color: 0x44aa88});
+   </script>
 
 
 
 
-camera.position.z = 5;
 
-  			// Our Javascript will go here.
-  	</script>
+    <p>
+      This is working so far
+    </p>
 
 
   </body>
