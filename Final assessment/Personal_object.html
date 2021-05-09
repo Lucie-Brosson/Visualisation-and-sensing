@@ -8,10 +8,6 @@
     <script src=".\js\three\build\three.js"></script>
     <script src=".\API-library\d3\d3.js"></script>
 
-    API-library\d3\d3.js
-
-
-
 
   </head>
 
@@ -57,36 +53,139 @@
        return test2
       })
 
-// 3D sketch
+
+    // 3D sketch
+
+    function main() {
+      const canvas = document.querySelector('#c');
+      const renderer = new THREE.WebGLRenderer({canvas});
+
+    //set the color of the background
+      renderer.setClearColor(0xf5d5d3);
 
 
-   function main() {
-     const canvas = document.querySelector('#c');
-     const renderer = new THREE.WebGLRenderer({canvas});
+      const fov = 75; //field of view
+      const aspect = window.innerWidth/window.innerHeight;  // the canvas default -Aspect ratio
+      const near = 0.1; //Near clipping pane
+      const far = 1000; // Far clipping pane
+      const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
-     const fov = 75;
-     const aspect = 2;  // the canvas default
-     const near = 0.1;
-     const far = 5;
-     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-     camera.position.z = 2;
+      //camera position
+      camera.position.set(5,5,0);
 
-     const scene = new THREE.Scene();
+      // Point the camera at a given coordinate
+   	 camera.lookAt(new THREE.Vector3(0,0,0));
 
-     const boxWidth = 1;
-     const boxHeight = 1;
-     const boxDepth = 1;
-     const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
 
-     const material = new THREE.MeshBasicMaterial({color: 0x44aa88});  // greenish blue
+      const scene = new THREE.Scene();
 
-     const cube = new THREE.Mesh(geometry, material);
-     scene.add(cube);
+      // light
+      const color = 0xFFFFFF;
+      const intensity = 1;
 
-     renderer.render(scene, camera);
-   }
+      const light = new THREE.AmbientLight(color, 0.7);
+      light.position.set(0, 2, 4);
+      scene.add(light);
 
-   main();aterial = new THREE.MeshBasicMaterial({color: 0x44aa88});
+      //var light1 = new THREE.Poin
+
+      const light1 = new THREE.DirectionalLight(color, intensity);
+      light1.position.set(-1, 2, 4);
+      scene.add(light1);
+
+
+      // plane
+
+      /*const geometry = new THREE.PlaneGeometry( 5, 5, 5 );
+      const material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+      const plane = new THREE.Mesh( geometry, material );
+      plane.rotateX(Math.PI/2);
+      scene.add( plane );*/
+
+      // A mesh is created from the geometry and material, then added to the scene
+      var plane = new THREE.Mesh(
+      	new THREE.PlaneGeometry( 5, 5, 5, 5 ),
+      	new THREE.MeshBasicMaterial( { color: 0x222222, wireframe: true } )
+      );
+      plane.rotateX(Math.PI/2);
+      scene.add( plane );
+
+
+
+
+
+
+      // block
+
+      const boxWidth = 1;
+      const boxHeight = 1;
+      const boxDepth = 1;
+      const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
+
+      function makeInstance(geometry, color, x) {
+        const material = new THREE.MeshPhongMaterial({color});
+
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+
+        cube.position.x = x;
+
+        return cube;
+      }
+
+      const cubes = [
+        makeInstance(geometry, 0x44aa88,  0),
+        makeInstance(geometry, 0x8844aa, -2),
+        makeInstance(geometry, 0xaa8844,  2),
+      ];
+
+      //block end
+
+
+    //rendering to the size of the client canvas
+      function resizeRendererToDisplaySize(renderer) {
+        const canvas = renderer.domElement;
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        const needResize = canvas.width !== width || canvas.height !== height;
+        if (needResize) {
+          renderer.setSize(width, height, false);
+        }
+        return needResize;
+      }
+
+      function render(time) {
+        time *= 0.001;
+    // rendering with higher pixel
+        if (resizeRendererToDisplaySize(renderer)) {
+          const canvas = renderer.domElement;
+          camera.aspect = canvas.clientWidth / canvas.clientHeight;
+          camera.updateProjectionMatrix();
+        }
+
+        // modify the angle of the camera - doesn't work
+    
+
+    //animation of the cubes
+      /*  cubes.forEach((cube, ndx) => {
+          const speed = 1 + ndx * .1;
+          const rot = time * speed;
+          cube.rotation.x = rot;
+          cube.rotation.y = rot;
+        });
+*/
+        renderer.render(scene, camera);
+
+        requestAnimationFrame(render);
+      }
+
+      requestAnimationFrame(render);
+    }
+
+
+
+    main();
+
    </script>
 
 
