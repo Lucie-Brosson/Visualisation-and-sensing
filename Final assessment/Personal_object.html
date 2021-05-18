@@ -5,9 +5,15 @@
     <title>Personal Object</title>
 
     <link rel="stylesheet" href="./Personal_object.css">
+
     <script src=".\js\three\build\three.js"></script>
     <script src=".\API-library\d3\d3.js"></script>
+    <script type="module" src=".\js\three\examples\jsm\controls\OrbitControls.js"></script>
 
+    <!--My script
+
+    <script src=".\Personnal_object.js"></script>
+-->
 
   </head>
 
@@ -19,10 +25,27 @@
 
    <script>
 
+
 // Annalyse the data and seperates it
 // TO do  : create different function depending what I want
 // Room -> category -> link to me Attention for the number of object will need to multiply
+    /*const loader = new THREE.Fileloader();
 
+    loader.load(
+      'Life_data.csv',
+      function (data){
+        console.log(data)
+      },
+
+      function (xhr){
+        console.log((xhr.loaded/xhr.total * 100)+ ' % loaded');
+      },
+
+      function (err) {
+        console.error ('An error happened in the CSV loading');
+      }
+    );*/
+/*
    d3.csv("Life_data.csv")
       .then (function (data) {
         let newData = data.map(d => ({
@@ -53,8 +76,16 @@
        return test2
       })
 
+      .then(function(data){
+        console.log(data)
+        draw_rect(data)
+      })
+*/
+
 
     // 3D sketch
+
+    document.addEventListener('mousedown',onDocumentMouseDown,false);
 
     function main() {
       const canvas = document.querySelector('#c');
@@ -63,6 +94,7 @@
     //set the color of the background
       renderer.setClearColor(0xf5d5d3);
 
+      //camera
 
       const fov = 75; //field of view
       const aspect = window.innerWidth/window.innerHeight;  // the canvas default -Aspect ratio
@@ -94,52 +126,98 @@
       scene.add(light1);
 
 
-      // plane
+      // plane - floor
+      // TO do {
+        // make the plane visible without wireframe
 
-      /*const geometry = new THREE.PlaneGeometry( 5, 5, 5 );
-      const material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
-      const plane = new THREE.Mesh( geometry, material );
-      plane.rotateX(Math.PI/2);
-      scene.add( plane );*/
+      var materialFloor = new THREE.MeshLambertMaterial({
+          color:0x44aa88,
+          emissive : 0x44aa88,
+          wireframe : true
 
-      // A mesh is created from the geometry and material, then added to the scene
-      var plane = new THREE.Mesh(
-      	new THREE.PlaneGeometry( 5, 5, 5, 5 ),
-      	new THREE.MeshBasicMaterial( { color: 0x222222, wireframe: true } )
-      );
-      plane.rotateX(Math.PI/2);
-      scene.add( plane );
+        });
+
+      var PlaneFloorGeometry = new THREE.PlaneGeometry( 100, 100, 100, 100 );
+      var FloorMesh = new THREE.Mesh(PlaneFloorGeometry, materialFloor);
+
+      FloorMesh.rotateX(Math.PI/2);
+      FloorMesh.position.y = -1;
+      scene.add(FloorMesh);
+
+      // Delimitation of the rooms
+
+      const BedroomMaterial = new THREE.MeshLambertMaterial({
+        color : 0x44aa88,
+      });
+      const Bedroomgeometry = new THREE.BoxGeometry(15/*boxWidth*/, 0.25/*boxHeight*/, 10/*boxDepth*/);
+      const BedroomMesh = new THREE.Mesh(Bedroomgeometry, BedroomMaterial);
+      BedroomMesh.position.x = -2;
+      BedroomMesh.position.z = 2;
 
 
+      scene.add(BedroomMesh);
 
 
+// Bethroom
+      const BathroomMaterial = new THREE.MeshLambertMaterial({
+        color : 0xd9ca48,
+      });
+      const Bathroomgeometry = new THREE.BoxGeometry(7.5/*boxWidth*/, 0.3/*boxHeight*/, 5/*boxDepth*/);
+      const BathroomMesh = new THREE.Mesh(Bathroomgeometry, BathroomMaterial);
+      BathroomMesh.position.x = -5.75;
+      BathroomMesh.position.z = 4.5;
+
+      scene.add(BathroomMesh);
 
 
-      // block
+// Kitchen
+      const KitchenMaterial = new THREE.MeshLambertMaterial({
+        color : 0x8844aa,
+      });
+      const Kitchengeometry = new THREE.BoxGeometry(8/*boxWidth*/, 0.35/*boxHeight*/, 8/*boxDepth*/);
+      const KitchenMesh = new THREE.Mesh(Kitchengeometry, KitchenMaterial);
+      KitchenMesh.position.x = -5.25;
+      KitchenMesh.position.z = -8;
 
-      const boxWidth = 1;
-      const boxHeight = 1;
-      const boxDepth = 1;
-      const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
+      scene.add(KitchenMesh);
 
-      function makeInstance(geometry, color, x) {
-        const material = new THREE.MeshPhongMaterial({color});
 
-        const cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
+//pedestal for my favorite object
 
-        cube.position.x = x;
+    const Pedestal1Material = new THREE.MeshLambertMaterial({
+      color : 0xf589f3,
+    });
+    const Pedestal1geometry = new THREE.BoxGeometry(0.75/*boxWidth*/, 3/*boxHeight*/, 0.75/*boxDepth*/);
+    const Pedestal1Mesh = new THREE.Mesh(Pedestal1geometry, Pedestal1Material);
+    Pedestal1Mesh.position.x = -11;
+    Pedestal1Mesh.position.z = 0;
 
-        return cube;
-      }
+    scene.add(Pedestal1Mesh);
 
-      const cubes = [
-        makeInstance(geometry, 0x44aa88,  0),
-        makeInstance(geometry, 0x8844aa, -2),
-        makeInstance(geometry, 0xaa8844,  2),
-      ];
+    const Pedestal2Material = new THREE.MeshLambertMaterial({
+      color : 0xf589f3,
+    });
+    const Pedestal2geometry = new THREE.BoxGeometry(0.75/*boxWidth*/, 2.5/*boxHeight*/, 0.75/*boxDepth*/);
+    const Pedestal2Mesh = new THREE.Mesh(Pedestal2geometry, Pedestal2Material);
+    Pedestal2Mesh.position.x = -11;
+    Pedestal2Mesh.position.z = -1;
 
-      //block end
+    scene.add(Pedestal2Mesh);
+
+    const Pedestal3Material = new THREE.MeshLambertMaterial({
+      color : 0xf589f3,
+    });
+    const Pedestal3geometry = new THREE.BoxGeometry(0.75/*boxWidth*/, 2/*boxHeight*/, 0.75/*boxDepth*/);
+    const Pedestal3Mesh = new THREE.Mesh(Pedestal3geometry, Pedestal3Material);
+    Pedestal3Mesh.position.x = -11;
+    Pedestal3Mesh.position.z = 1;
+
+    scene.add(Pedestal3Mesh);
+
+
+    // User character
+
+
 
 
     //rendering to the size of the client canvas
@@ -164,7 +242,7 @@
         }
 
         // modify the angle of the camera - doesn't work
-    
+
 
     //animation of the cubes
       /*  cubes.forEach((cube, ndx) => {
