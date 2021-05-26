@@ -1,10 +1,64 @@
 console.log("helloo I am preinting")
-console.log ('version 2')
 
-
-import * as THREE from 'https://unpkg.com/three/build/three.module.js';
-
+import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r127/three.module.js';
 import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/controls/OrbitControls.js';
+
+
+// Annalyse the data and seperates it
+// TO do  : create different function depending what I want
+// Room -> category -> link to me Attention for the number of object will need to multiply
+ /*const loader = new THREE.Fileloader();
+
+ loader.load(
+   'Life_data.csv',
+   function (data){
+     console.log(data)
+   },
+
+   function (xhr){
+     console.log((xhr.loaded/xhr.total * 100)+ ' % loaded');
+   },
+
+   function (err) {
+     console.error ('An error happened in the CSV loading');
+   }
+ );*/
+/*
+d3.csv("Life_data.csv")
+   .then (function (data) {
+     let newData = data.map(d => ({
+       object : d.objet,
+       room : d.Room,
+       number_of_item : +d.number,
+       link_to_me : +d.Link,
+       category : d.Category,
+       is_it_decoration : d.is_it_decoration
+     }));
+
+     return newData;
+   })
+   .then(function (data) {
+     let sort_link = data.sort((a, b) => d3.ascending(a.link_to_me, b.link_to_me));
+
+     let count_sorted_link = d3.group(sort_link, d => d.link_to_me);
+
+     let test1 = d3.rollup(sort_link, v => v.length, d=> d.link_to_me)
+
+     let test2 = (Array.from(test1))
+
+     console.log (sort_link)
+     console.log (count_sorted_link)
+     console.log(test1)
+     console.log (test2)
+
+    return test2
+   })
+
+   .then(function(data){
+     console.log(data)
+     draw_rect(data)
+   })
+*/
 
 
  // 3D sketch
@@ -26,29 +80,10 @@ import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/contro
    const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
    //camera position
-   camera.position.y = -5;
-   camera.position.x = -1;
-   camera.position.z = 10;
+   camera.position.set(5,5,0);
 
-
-   var  controls = new OrbitControls(camera, renderer.domElement);
-
-  controls.target.set(4.5, 0, 4.5);
-
-  controls.enablePan = false;
-  controls.maxPolarAngle = Math.PI / 2;
-
-  controls.enableDamping = true;
-
-  window.requestAnimationFrame(animate);
    // Point the camera at a given coordinate
- // camera.lookAt(new THREE.Vector3(0,0,0));
-
- function animate() {
-  controls.update();
-  renderer.render(scene, camera);
-  window.requestAnimationFrame(animate);
-}
+  camera.lookAt(new THREE.Vector3(0,0,0));
 
 
    const scene = new THREE.Scene();
@@ -159,17 +194,6 @@ import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/contro
 
  // User character
 
-
- const UserMaterial = new THREE.MeshLambertMaterial({
-   color : 0xf589f3,
- });
- const Usergeometry = new THREE.SphereGeometry(0.6/*radius*/, 14/*widthsegment*/, 14/*height Segments*/);
- const UserMesh = new THREE.Mesh(Usergeometry, UserMaterial);
- UserMesh.position.x = 1;
- UserMesh.position.z = 1;
- UserMesh.position.y = 1;
-
- scene.add(UserMesh);
 
 
 
