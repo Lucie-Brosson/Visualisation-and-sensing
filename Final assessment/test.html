@@ -8,10 +8,35 @@
 
     <!--My script -->
 
-    <script src=".\test.js"></script>
+
 
   </head>
-  <body onload="init()">
+  <body>
+
+      <script >
+      console.log('hello')
+
+      async function getData(){
+        const response = await fetch('./test.csv');
+        const data = await response.text();
+        console.log(data);
+
+        const rows = data.split('\n');
+        rows.forEach(item => {
+          const columns = item.split(',');
+          const room = columns[1];
+          const number_of_item = columns[2];
+          const link_to_me = columns[3];
+          const object_category = columns[4]
+          console.log(room, link_to_me)
+        })
+      }
+      getData();
+
+      </script>
+
+
+
 
   </body>
 </html>

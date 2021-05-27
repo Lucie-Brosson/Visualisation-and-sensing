@@ -6,9 +6,35 @@ import * as THREE from 'https://unpkg.com/three/build/three.module.js';
 
 import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/controls/OrbitControls.js';
 
+// CSV Data handling
+
+console.log('hello')
+
+async function getData(){
+  const response = await fetch('./Life_data.csv');
+  const data = await response.text();
+  console.log(data);
+
+  const room=[]
+
+  const rows = data.split('\n');
+  rows.forEach(item => {
+    var columns = item.split(',');
+    var room = columns[1];
+    var number_of_item = columns[2];
+    var link_to_me = columns[3];
+    var object_category = columns[4]
+
+
+
+    console.log(room, link_to_me)
+  })
+}
+getData();
+
+console.log (room )
 
  // 3D sketch
-
 
  function main() {
    const canvas = document.querySelector('#c');
