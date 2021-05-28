@@ -15,17 +15,22 @@ async function getData(){
   const data = await response.text();
   console.log(data);
 
-  const room=[]
+  const room = []
+  const number_of_item = []
+  const link_to me = []
+
+  const name = []
+
+  const object_category=[]
 
   const rows = data.split('\n');
   rows.forEach(item => {
-    var columns = item.split(',');
-    var room = columns[1];
-    var number_of_item = columns[2];
-    var link_to_me = columns[3];
-    var object_category = columns[4]
-
-
+    const columns = item.split(',');
+    name.push(columns[0]);
+    room.push(columns[1]);
+    number_of_item.push(columns[2]);
+    link_to_me.push(columns[3]);
+    object_category.push(columns[4]);
 
     console.log(room, link_to_me)
   })
@@ -126,7 +131,7 @@ console.log (room )
    scene.add(BedroomMesh);
 
 
-// Bethroom
+// Bathroom
    const BathroomMaterial = new THREE.MeshLambertMaterial({
      color : 0xd9ca48,
    });
@@ -196,6 +201,81 @@ console.log (room )
  UserMesh.position.y = 1;
 
  scene.add(UserMesh);
+
+ // object
+
+ async function object_creation(){
+   const object_details = await getData();
+
+   for (var object = 0; object< object_details.lenght;i++){
+     if (object_details.room = "bathroom" ){
+
+        var bathroom_object_material;
+        var bathroom_object_geometry;
+        var bathroom_object_mesh;
+
+
+
+        console.log(object_details.name(bathroom_object_material))
+
+
+       object_details.name(bathroom_object_material) = new THREE.MeshLambertMaterial({
+         color : 0xf589f3,
+       });
+       object_details.name(bathroom_object_geometry) = new THREE.BoxGeometry(0.75/*boxWidth*/, 2/*boxHeight*/, 0.75/*boxDepth*/);
+       object_details.name(bathroom_object_mesh) = new THREE.Mesh( object_details.name(bathroom_object_geometry), object_details.name(bathroom_object_material));
+       object_details.name(bathroom_object_mesh).position.x = -11;
+       object_details.name(bathroom_object_mesh).position.z = 1;
+
+       scene.add(Pedestal3Mesh);
+
+     }
+
+     if (object_details.room = "storage" ){
+
+     }
+
+     if (object_details.room = "wardrob" ){
+
+     }
+
+     if (object_details.room = "Bedroom" ){
+
+     }
+
+     if (object_details.room = "desk" ){
+
+     }
+
+     if (object_details.room = "kitchen" ){
+
+     }
+   }
+ }
+
+ async function object_creation_color(){
+   if (object_details.link_to_me = "1"){
+
+   }
+   if (object_details.link_to_me = "2"){
+
+   }
+   if (object_details.link_to_me = "3"){
+
+   }
+   if (object_details.link_to_me = "4"){
+
+   }
+   if (object_details.link_to_me = "5"){
+
+   }
+   if (object_details.link_to_me = "6"){
+
+   }
+   if (object_details.link_to_me = "7"){
+
+   }
+ }
 
 
 
