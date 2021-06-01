@@ -66,7 +66,7 @@ import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/contro
 
    // Music and sound of the Scene
 
-
+/*
    const listener = new THREE.AudioListener();
    camera.add( listener );
 
@@ -79,7 +79,7 @@ import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/contro
   	sound.setVolume( 0.05 );
   	sound.play();
    });
-
+*/
    // add music
 
 
@@ -194,20 +194,16 @@ import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/contro
 
  // CSV Data handling
 
- getData();
+ get_Data();
  object_creation();
 
-
+  const object_name = [];
   const object_room = [];
   const object_number_of_item = [];
   const object_link_to_me = [];
-
-  const object_name = [];
-
   const object_category=[];
 
-
- async function getData(){
+ async function get_Data(){
    const response = await fetch('./test.csv');
    const data = await response.text();
 
@@ -221,22 +217,111 @@ import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/contro
      object_number_of_item.push(columns[2]);
      object_link_to_me.push(columns[3]);
      object_category.push(columns[4]);
-
    })
  }
 
  class object {
    constructor(){
-     await getData();
 
-     this.object_name = object_name;
-     console.log(this.object_name);
+     this.name = object_name;
+     this.room = object_room;
+     this.number_of_item = object_number_of_item;
+     this.link_to_me = object_link_to_me;
+     this.category = object_category;
+     console.log(this.name);
      console.log ('the class is working');
+   }
 
+   position(){
+     if (this.room = "Bedroom"){
+       this.x_position =  0;
+       this.y_position =  1;
+       this.z_position =  3;
+     }
+     if (this.room = "Desk"){
+       this.x_position =  2;
+       this.y_position =  1;
+       this.z_position =  -2;
+     }
+     if (this.link_to_me = "wardrobe"){
+       this.x_position =  -5;
+       this.y_position =  1;
+       this.z_position =  1;
+     }
+     if (this.link_to_me = "storage"){
+       this.x_position =  2;
+       this.y_position =  1;
+       this.z_position =  5;
+     }
+     if (this.room = "kitchen"){
+       this.x_position = -5 ;
+       this.y_position =  1;
+       this.z_position =  -10;
+     }
+     if (this.link_to_me = "bathroom"){
+       this.x_position =  -9.5;
+       this.y_position =  1;
+       this.z_position =  5;
+     }
+     if (this.link_to_me = "other"){
+       this.x_position =  5;
+       this.y_position =  1;
+       this.z_position =  4;
+     }
+   }
+   color(){
+     if (this.link_to_me = 1){
+       // my favorite object
+       this.color =  "0xf5f542"
+     }
+     if (this.link_to_me = 1){
+       // object that I need or like a lot
+       this.color =  "0xff8000"
+     }
+     if (this.link_to_me = 1){
+       //object that I need sometimes or I like having them around
+       this.color = "0xf20000"
+     }
+     if (this.link_to_me = 1){
+       // Object I keep in case
+       this.color =  "0x0dd621"
+     }
+     if (this.link_to_me = 1){
+       // stock of object - I will use it at some point
+       this.color = "0x0da4d6"
+     }
+     if (this.link_to_me = 1){
+       // Object I would like to get ride out and are a weight to me
+       this.color =  "0x000000"
+     }
+
+   }
+   creation_of_object(){
+     this.object_material = new THREE.MeshLambertMaterial({
+       color : this.color,
+     });
+     this.object_geometry = new THREE.BoxGeometry(0.2/*radius*/, 0.2/*widthsegment*/, 0.2/*height Segments*/);
+     this.object_mesh = new THREE.Mesh(this.object_geometry, this.object_material);
+
+     this.object_mesh.position.x = this.x_postition;
+     this.object_mesh.position.z = this.y_position;
+     this.object_mesh.position.y = this.z_position;
+
+     scene.add(this.object_mesh);
    }
  }
 
- let Object_creation = new object(object_name[1]);
+async function object_creation(){
+  await get_Data()
+  // find a way to make it work
+  for (let i=0; i< object_name.length; i++){
+      let Object_creation = new object(object_name[i], object_room[i], object_number_of_item[i], object_link_to_me[i], object_category[i]);
+      Object_creation.creation_of_object();
+  }
+}
+
+
+
 
 
 
