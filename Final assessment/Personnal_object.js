@@ -76,7 +76,7 @@ import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/contro
    audioLoader.load( './city_sound.wav', function( buffer ) {
   	sound.setBuffer( buffer );
   	sound.setLoop( true );
-  	sound.setVolume( 0.1 );
+  	sound.setVolume( 0.05 );
   	sound.play();
    });
 
@@ -175,9 +175,6 @@ import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/contro
 
  // User character
 
-
-
-
  const UserMaterial = new THREE.MeshLambertMaterial({
    color : 0xf589f3,
  });
@@ -201,11 +198,11 @@ import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/contro
  object_creation();
 
 
-  const room = [];
-  const number_of_item = [];
-  const link_to_me = [];
+  const object_room = [];
+  const object_number_of_item = [];
+  const object_link_to_me = [];
 
-  const name = [];
+  const object_name = [];
 
   const object_category=[];
 
@@ -219,76 +216,28 @@ import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/contro
 
    rows.forEach(item => {
      const columns = item.split(',');
-     name.push(columns[0]);
-     room.push(columns[1]);
-     number_of_item.push(columns[2]);
-     link_to_me.push(columns[3]);
+     object_name.push(columns[0]);
+     object_room.push(columns[1]);
+     object_number_of_item.push(columns[2]);
+     object_link_to_me.push(columns[3]);
      object_category.push(columns[4]);
 
    })
  }
 
+ class object {
+   constructor(){
+     await getData();
 
- async function object_creation(){
-
-   await getData();
-
-   for (let object = 0 ; object < room.length ; object++){
-
-     let variable_placement = 0.5 * object;
-
-     console.log(room[object]);
-
-     if (room[object] = "Bedroom"){
-
-       // create condition if bedroom is with a small first letter
-
-       console.log ('object creation is working bedroom loop working ');
-      .then(function(response)=> {
-        this['test'+object] = 'the variable is working';
-// use dynamic variable 
-      })
-
-
-       this['Bedroom_object_material'+ object] = new THREE.MeshLambertMaterial({color : 0xf589f3,});
-       console.log(test + object)
-       this['Bedroom_object_geometry'+ object] = new THREE.BoxGeometry(0.2/*boxWidth*/, 0.2/*boxHeight*/, 0.2/*boxDepth*/);
-       this['Bedroom_object_mesh'+ object] = new THREE.Mesh(Bedroom_object_material, Bedroom_object_geometry);
-       Bedroom_object_mesh.position.x = -11 + variable_placement;
-       Bedroom_object_mesh.position.z = 1 + variable_placement;
-
-       scene.add(Bedroom_object_mesh);
-
-      }
-
-
-    }
-  }
-
-
- async function object_creation_color(){
-   if (object_details.link_to_me = "1"){
-
-   }
-   if (object_details.link_to_me = "2"){
-
-   }
-   if (object_details.link_to_me = "3"){
-
-   }
-   if (object_details.link_to_me = "4"){
-
-   }
-   if (object_details.link_to_me = "5"){
-
-   }
-   if (object_details.link_to_me = "6"){
-
-   }
-   if (object_details.link_to_me = "7"){
+     this.object_name = object_name;
+     console.log(this.object_name);
+     console.log ('the class is working');
 
    }
  }
+
+ let Object_creation = new object(object_name[1]);
+
 
 
 
