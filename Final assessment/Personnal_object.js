@@ -1,40 +1,8 @@
 console.log("helloo I am preinting")
-console.log ('version 2')
-
 
 import * as THREE from 'https://unpkg.com/three/build/three.module.js';
 
 import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/controls/OrbitControls.js';
-
-// CSV Data handling
-
-console.log('hello')
-
-async function getData(){
-  const response = await fetch('./test.csv');
-  const data = await response.text();
-  console.log(data);
-
-  const room = [];
-  const number_of_item = [];
-  const link_to_me = [];
-
-  const name = [];
-
-  const object_category=[];
-
-  const rows = data.split('\n');
-  rows.forEach(item => {
-    const columns = item.split(',');
-    name.push(columns[0]);
-    room.push(columns[1]);
-    number_of_item.push(columns[2]);
-    link_to_me.push(columns[3]);
-    object_category.push(columns[4]);
-
-  })
-}
-getData();
 
 
  // 3D sketch
@@ -98,11 +66,10 @@ getData();
 
    // Music and sound of the Scene
 
-   // create an AudioListener and add it to the camera
+
    const listener = new THREE.AudioListener();
    camera.add( listener );
 
-   // create a global audio source
    const sound = new THREE.Audio( listener );
 
    const audioLoader = new THREE.AudioLoader();
@@ -112,6 +79,8 @@ getData();
   	sound.setVolume( 0.1 );
   	sound.play();
    });
+
+   // add music
 
 
 // From this point the code is generating object (the plan, the delimitation of the ground, ect)
@@ -223,90 +192,79 @@ getData();
 
  scene.add(UserMesh);
 
+// Here The object are created
  // object
 
+ // CSV Data handling
+
+ getData();
+ object_creation();
+
+
+  const room = [];
+  const number_of_item = [];
+  const link_to_me = [];
+
+  const name = [];
+
+  const object_category=[];
+
+
+ async function getData(){
+   const response = await fetch('./test.csv');
+   const data = await response.text();
+
+   console.log('get data is working');
+   const rows = data.split('\n');
+
+   rows.forEach(item => {
+     const columns = item.split(',');
+     name.push(columns[0]);
+     room.push(columns[1]);
+     number_of_item.push(columns[2]);
+     link_to_me.push(columns[3]);
+     object_category.push(columns[4]);
+
+   })
+ }
+
+
  async function object_creation(){
-   const object_details = await getData();
 
-   for (var object = 0; object< object_details.lenght;i++){
+   await getData();
 
-     var variable_placement = 0.5 * object;
+   for (let object = 0 ; object < room.length ; object++){
 
-     if (object_details.room = "bathroom" ){
+     let variable_placement = 0.5 * object;
 
-       var variable_placement = 0.5 * object;
+     console.log(room[object]);
 
-       var bathroom_object_material = new THREE.MeshLambertMaterial({color : 0xf589f3,});
-       var bathroom_object_geometry = new THREE.BoxGeometry(0.2/*boxWidth*/, 0.2/*boxHeight*/, 0.2/*boxDepth*/);
-       var bathroom_object_mesh = new THREE.Mesh( bathroom_object_material, bathroom_object_geometry);
-       bathroom_object_mesh.position.x = -11 + variable_placement;
-       bathroom_object_mesh.position.z = 1 + variable_placement;
+     if (room[object] = "Bedroom"){
 
-       scene.add(bathroom_object_mesh);
+       // create condition if bedroom is with a small first letter
 
-     }
+       console.log ('object creation is working bedroom loop working ');
+      .then(function(response)=> {
+        this['test'+object] = 'the variable is working';
+// use dynamic variable 
+      })
 
-     if (object_details.room = "storage" ){
 
-       var bathroom_object_material = new THREE.MeshLambertMaterial({color : 0xf589f3,});
-       var bathroom_object_geometry = new THREE.BoxGeometry(0.2/*boxWidth*/, 0.2/*boxHeight*/, 0.2/*boxDepth*/);
-       var bathroom_object_mesh = new THREE.Mesh( bathroom_object_material, bathroom_object_geometry);
-       bathroom_object_mesh.position.x = -11+ variable_placement;
-       bathroom_object_mesh.position.z = 1 + variable_placement;
-
-       scene.add(bathroom_object_mesh);
-
-     }
-
-     if (object_details.room = "Wardrob" ){
-
-       var Wardrob_object_material = new THREE.MeshLambertMaterial({color : 0xf589f3,});
-       var Wardrob_object_geometry = new THREE.BoxGeometry(0.2/*boxWidth*/, 0.2/*boxHeight*/, 0.2/*boxDepth*/);
-       var Wardrob_object_mesh = new THREE.Mesh( Wardrob_object_material, Wardrob_object_geometry);
-       Wardrob_object_mesh.position.x = -11+ variable_placement;
-       Wardrob_object_mesh.position.z = 1 + variable_placement;
-
-       scene.add(Wardrob_object_mesh);
-
-     }
-
-     if (object_details.room = "Bedroom" ){
-
-       var Bedroom_object_material = new THREE.MeshLambertMaterial({color : 0xf589f3,});
-       var Bedroom_object_geometry = new THREE.BoxGeometry(0.2/*boxWidth*/, 0.2/*boxHeight*/, 0.2/*boxDepth*/);
-       var Bedroom_object_mesh = new THREE.Mesh( Bedroom_object_material, Bedroom_object_geometry);
+       this['Bedroom_object_material'+ object] = new THREE.MeshLambertMaterial({color : 0xf589f3,});
+       console.log(test + object)
+       this['Bedroom_object_geometry'+ object] = new THREE.BoxGeometry(0.2/*boxWidth*/, 0.2/*boxHeight*/, 0.2/*boxDepth*/);
+       this['Bedroom_object_mesh'+ object] = new THREE.Mesh(Bedroom_object_material, Bedroom_object_geometry);
        Bedroom_object_mesh.position.x = -11 + variable_placement;
        Bedroom_object_mesh.position.z = 1 + variable_placement;
 
        scene.add(Bedroom_object_mesh);
 
-     }
+      }
 
-     if (object_details.room = "desk" ){
 
-       var desk_object_material = new THREE.MeshLambertMaterial({color : 0xf589f3,});
-       var desk_object_geometry = new THREE.BoxGeometry(0.2/*boxWidth*/, 0.2/*boxHeight*/, 0.2/*boxDepth*/);
-       var desk_object_mesh = new THREE.Mesh( desk_object_material, desk_object_geometry);
-       desk_object_mesh.position.x = -11 + variable_placement;
-       desk_object_mesh.position.z = 1 + variable_placement;
+    }
+  }
 
-       scene.add(desk_object_mesh);
-
-     }
-
-     if (object_details.room = "kitchen" ){
-
-       var kitchen_object_material = new THREE.MeshLambertMaterial({color : 0xf589f3,});
-       var kitchen_object_geometry = new THREE.BoxGeometry(0.2/*boxWidth*/, 0.2/*boxHeight*/, 0.2/*boxDepth*/);
-       var kitchen_object_mesh = new THREE.Mesh( kitchen_object_material, kitchen_object_geometry);
-       kitchen_object_mesh.position.x = -11 + variable_placement;
-       kitchen_object_mesh.position.z = 1 + variable_placement;
-
-       scene.add(kitchen_object_mesh);
-
-     }
-   }
- }
 
  async function object_creation_color(){
    if (object_details.link_to_me = "1"){
@@ -331,6 +289,8 @@ getData();
 
    }
  }
+
+
 
 
 
