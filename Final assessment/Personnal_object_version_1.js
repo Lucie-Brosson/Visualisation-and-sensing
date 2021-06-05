@@ -200,7 +200,7 @@ import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/contro
   const object_link_to_me = [];
   const object_category= [];
 
-  let i=0
+  let i = 1;
 
  async function get_Data(){
    const response = await fetch('./test.csv');
@@ -227,105 +227,90 @@ import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/contro
      this.number_of_item = object_number_of_item;
      this.link_to_me = object_link_to_me;
      this.category = object_category;
-
    }
 
    position(){
-     if (this.room[this.i] = "Bedroom"){
+
+     console.log(this.room[this.i])
+
+     this.x_position =  0;
+     this.y_position =  0;
+     this.z_position =  0;
+
+
+
+     if ( (this.room[this.i] === "Bedroom ") || (this.room[this.i] === "Bedroom") || (this.room[this.i] === "bedroom ") || (this.room[this.i] === "bedroom") ){
        this.x_position =  0;
        this.y_position =  1;
        this.z_position =  3;
      }
-     if (this.room[this.i]= "Desk"){
+     if ((this.room[this.i] === "Desk ") || (this.room[this.i] === "Desk") || (this.room[this.i] === "desk ") || (this.room[this.i] === "desk")){
        this.x_position =  2;
        this.y_position =  1;
        this.z_position =  -2;
      }
-     if (this.room[this.i] = "wardrobe"){
+     if (this.room[this.i] === "wardrobe "){
        this.x_position =  -5;
        this.y_position =  1;
        this.z_position =  1;
      }
-     if (this.room[this.i] = "storage"){
+     if (this.room[this.i] === "storage "){
        this.x_position =  2;
        this.y_position =  1;
        this.z_position =  5;
      }
-     if (this.room[this.i]= "kitchen"){
+     if (this.room[this.i] === "kitchen "){
        this.x_position = -5 ;
        this.y_position =  1;
        this.z_position =  -10;
      }
-     if (this.room[this.i]= "bathroom"){
+     if (this.room[this.i] === "bathroom "){
        this.x_position =  -9.5;
        this.y_position =  1;
        this.z_position =  5;
      }
-     if (this.room[this.i] = "other"){
+     if (this.room[this.i] === "other "){
        this.x_position =  5;
        this.y_position =  1;
        this.z_position =  4;
      }
+
    }
+
    color(){
-     if (this.link_to_me[this.i] = "1"){
-       // my favorite object
-       this.color =  "0xf5f542"
-     }
-     if (this.link_to_me[this.i]  = "2"){
-       // object that I need or like a lot
-       this.color =  "0xff8000"
-     }
-     if (this.link_to_me[this.i]  = 3){
-       //object that I need sometimes or I like having them around
-       this.color = "0xf20000"
-     }
-     if (this.link_to_me[this.i]  = 4){
-       // Object I keep in case
-       this.color =  "0x0dd621"
-     }
-     if (this.link_to_me[this.i]  = 5){
-       // stock of object - I will use it at some point
-       this.color = "0x0da4d6"
-     }
-     if (this.link_to_me[this.i]  = 6){
-       // Object I would like to get ride out and are a weight to me
-       this.color =  "0x020108"
-     }
+      this.color = "rgb(255,255,255)"
+
+      if (this.link_to_me[this.i] == "1"){
+        // my favorite object
+        this.color =  "rgb(243,247,0)"
+      }
+      if (this.link_to_me[this.i] == "2"){
+        // object that I need or like a lot
+        this.color =  "rgb(247, 157, 0)"
+      }
+      if (this.link_to_me[this.i] == "3"){
+        //object that I need sometimes or I like having them around
+        this.color = "rgb(247, 8, 0)"
+      }
+      if (this.link_to_me[this.i]  == "4"){
+        // Object I keep in case
+        this.color =  "rgb(0, 247, 58)"
+      }
+      if (this.link_to_me[this.i]  == "5"){
+        // stock of object - I will use it at some point
+        this.color = "rgb(0, 235, 247)"
+      }
+      if (this.link_to_me[this.i]  == "6"){
+        // Object I would like to get ride out and are a weight to me
+        this.color =  "rgb(0,0,0)"
+      }
 
    }
    creation_of_object(){
 
-     this.color = "0xffffff"
+     this.color();
 
-     if (this.link_to_me[this.i] = "1"){
-       // my favorite object
-       this.color =  "0xf5f542"
-     }
-     if (this.link_to_me[this.i] = "2"){
-       // object that I need or like a lot
-       this.color =  "0xff8000"
-     }
-     if (this.link_to_me[this.i]  = "3"){
-       //object that I need sometimes or I like having them around
-       this.color = "0xf20000"
-     }
-     if (this.link_to_me[this.i]  = "4"){
-       // Object I keep in case
-       this.color =  "0x0dd621"
-     }
-     if (this.link_to_me[this.i]  = "5"){
-       // stock of object - I will use it at some point
-       this.color = "0x0da4d6"
-     }
-     if (this.link_to_me[this.i]  = "6"){
-       // Object I would like to get ride out and are a weight to me
-       this.color =  "rgb(0,0,0)"
-     }
-     console.log(object_link_to_me)
-     console.log(this.link_to_me)
-     console.log(this.link_to_me[this.i])
-     //position();
+     this.position();
 
      this.object_material = new THREE.MeshLambertMaterial({
        color : this.color,
@@ -333,9 +318,13 @@ import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/contro
      this.object_geometry = new THREE.BoxGeometry(0.2/*radius*/, 0.2/*widthsegment*/, 0.2/*height Segments*/);
      this.object_mesh = new THREE.Mesh(this.object_geometry, this.object_material);
 
-     this.object_mesh.position.x = 1* this.i;//this.x_postition;
-     this.object_mesh.position.z = 1* this.i;//this.y_position;
-     this.object_mesh.position.y = 2* this.i;//this.z_position;
+     this.object_mesh.position.x = this.x_position;
+     this.object_mesh.position.y = this.y_position + (0.2*this.i);
+     this.object_mesh.position.z = this.z_position ;
+
+     console.log(this.x_position)
+     console.log(this.y_position)
+     console.log(this.z_position)
 
      scene.add(this.object_mesh);
    }
@@ -343,8 +332,8 @@ import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/contro
 
 async function object_creation(){
   await get_Data()
-  // find a way to make it work
-  for (i=0; i< 2; i++){
+
+  for (i=1; i< object_name.length; i++){
       let Object_creation = new object(i, object_name, object_room, object_number_of_item, object_link_to_me, object_category);
 
       Object_creation.creation_of_object();
@@ -352,7 +341,7 @@ async function object_creation(){
 }
 
 object_creation()
-console.log(object_link_to_me);
+
 
 
 
