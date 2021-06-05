@@ -249,27 +249,27 @@ import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/contro
        this.y_position =  1;
        this.z_position =  -2;
      }
-     if (this.room[this.i] === "wardrobe "){
+     if ((this.room[this.i] === "Wardrob ") || (this.room[this.i] === "Wardrob") || (this.room[this.i] === "wardrob ") || (this.room[this.i] === "wardrob")){
        this.x_position =  -5;
        this.y_position =  1;
        this.z_position =  1;
      }
-     if (this.room[this.i] === "storage "){
+     if ((this.room[this.i] === "Storage ") || (this.room[this.i] === "Storage") || (this.room[this.i] === "storage ") || (this.room[this.i] === "storage")){
        this.x_position =  2;
        this.y_position =  1;
        this.z_position =  5;
      }
-     if (this.room[this.i] === "kitchen "){
+     if ((this.room[this.i] === "Bathroom ") || (this.room[this.i] === "Bathroom") || (this.room[this.i] === "bathroom ") || (this.room[this.i] === "bathroom")){
        this.x_position = -5 ;
        this.y_position =  1;
        this.z_position =  -10;
      }
-     if (this.room[this.i] === "bathroom "){
+     if ((this.room[this.i] === "Kitchen ") || (this.room[this.i] === "Kitchen") || (this.room[this.i] === "kitchen ") || (this.room[this.i] === "kitchen")){
        this.x_position =  -9.5;
        this.y_position =  1;
        this.z_position =  5;
      }
-     if (this.room[this.i] === "other "){
+     if ((this.room[this.i] === "Other ") || (this.room[this.i] === "Other") || (this.room[this.i] === "other ") || (this.room[this.i] === "other")){
        this.x_position =  5;
        this.y_position =  1;
        this.z_position =  4;
@@ -305,6 +305,49 @@ import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/contro
         this.color =  "rgb(0,0,0)"
       }
 
+   }
+
+   hoover(){
+
+     // when coordinates of the mouse is on an object
+     // display the name and the link to me
+
+
+     // create a Ray with origin at the mouse position
+//   and direction into the scene (camera direction)
+    var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+    projector.unprojectVector( vector, camera );
+    var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+
+// create an array containing all objects in the scene with which the ray intersects
+    var intersects = ray.intersectObjects( scene.children );
+
+// INTERSECTED = the object in the scene currently closest to the camera
+//      and intersected by the Ray projected from the mouse position
+
+// if there is one (or more) intersections
+    if ( intersects.length > 0 )
+    {
+    // if the closest object intersected is not the currently stored intersection object
+      if ( intersects[ 0 ].object != INTERSECTED )
+      {
+        // restore previous intersection object (if it exists) to its original color
+        if ( INTERSECTED )
+            INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+        // store reference to closest object as current intersection object
+        INTERSECTED = intersects[ 0 ].object;
+        
+
+    }
+else // there are no intersections
+{
+    // restore previous intersection object (if it exists) to its original color
+    if ( INTERSECTED )
+        INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+    // remove previous intersection object reference
+    //     by setting current intersection object to "nothing"
+    INTERSECTED = null;
+}
    }
    creation_of_object(){
 
