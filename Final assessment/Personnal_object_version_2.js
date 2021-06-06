@@ -386,11 +386,11 @@ object_creation()
 const raycaster = new THREE.Raycaster();
 const clickMouse = new THREE.Vector2();
 const moveMouse = new THREE.Vector2();
-var draggable : THREE.Object3D;
+var draggable = THREE.Object3D;
 
 window.addEventListener('click', event=>{
   if(draggable){
-    draggable = null as any
+    draggable = null
     return;
   }
   clickMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
