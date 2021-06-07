@@ -389,10 +389,12 @@ const moveMouse = new THREE.Vector2();
 var draggable = THREE.Object3D;
 
 window.addEventListener('click', event=>{
-  if(draggable){
-    draggable = null
+  /*if(draggable){
+    console.log('object is not dragged anymore')
+    draggable = null as any
     return;
-  }
+  }*/
+  console.log('click events works')
   clickMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   clickMouse.y = - (event.clientY / window.innerHeight) * 2 -1;
 
@@ -401,7 +403,7 @@ window.addEventListener('click', event=>{
 
   if (found.length > 0 && found[0].object.userData.draggable){
     draggable = found[0].object;
-    console.log('found draggable ${draggable.userData.name}')
+    console.log('found draggable')
   }
 })
 
