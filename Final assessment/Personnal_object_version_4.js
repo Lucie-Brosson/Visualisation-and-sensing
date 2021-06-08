@@ -11,19 +11,15 @@ import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/contro
 // 3D sketch
 init();
 
+var scene, camera, renderer, controls;
+
+
 function init() {
   //put the js file in the canvas
  const canvas = document.querySelector('#c');
- const renderer = new THREE.WebGLRenderer({canvas});
+ renderer = new THREE.WebGLRenderer({canvas});
 //set the color of the background
  renderer.setClearColor(0xf5d5d3);
-
-
- // create a world with gravity
- // const World = new CANNON.World({
- //   gravity : new CANNON.Vec3(0,-9.82,0),
- // })
-
 
  //camera orbit
 
@@ -31,7 +27,7 @@ function init() {
  const aspect = window.innerWidth/window.innerHeight;  // the canvas default -Aspect ratio
  const near = 0.1; //Near clipping pane
  const far = 1000; // Far clipping pane
- const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
  //camera position
  camera.position.y = -5;
@@ -39,7 +35,7 @@ function init() {
  camera.position.z = 10;
 
 
- var  controls = new OrbitControls(camera, renderer.domElement);
+ controls = new OrbitControls(camera, renderer.domElement);
 
   controls.target.set(4.5, 0, 4.5);
 
@@ -48,23 +44,13 @@ function init() {
 
   controls.enableDamping = true;
 
-  window.requestAnimationFrame(animate);
 
   const timeStep = 1 / 60 // seconds
   let lastCallTime
 
- function animate() {
-    controls.update();
-    renderer.render(scene, camera);
-    window.requestAnimationFrame(animate);
-
-    hover_Objects();
-
-  }
-
 
 // create a new scene
- const scene = new THREE.Scene();
+  scene = new THREE.Scene();
 
 
  // light
@@ -325,7 +311,6 @@ function init() {
 
    }
 
-
    creation_of_object(){
 
      this.color();
@@ -344,82 +329,119 @@ function init() {
      console.log(this.Object.userData.name);
    }
 
+   storage_objects(){
+
+   }
+
   }
 
   async function object_creation(){
-    await get_Data()
+
+    await get_Data();
+    let Object_Storage = [];
+
 
     for (i=1; i< object_name.length; i++){
         let Object_creation = new object(i, object_name, object_room, object_number_of_item, object_link_to_me, object_category);
 
         Object_creation.creation_of_object();
+
+        Object_Storage.push(Object_creation);
+
     }
-
+console.log(Object_Storage)
   }
 
-
-
-
-  let raycaster = new THREE.Raycaster();
-  let mouse = new THREE.Vector2()
-
-  function mouseMove(event){
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-  }
-
-  function hover_Objects() {
-
-	// update the picking ray with the camera and mouse position
-	raycaster.setFromCamera( mouse, camera );
-
-	// calculate objects intersecting the picking ray
-	const intersects = raycaster.intersectObjects( scene.children );
-
-	for ( let a = 0; a < intersects.length; a ++ ) {
-
-		intersects[ a ].object.material.color.set( 0xff0000 );
-
-	}
-
-	renderer.render( scene, camera );
-
-  }
-
-  window.addEventListener( 'mousemove', onMouseMove, false );
-
-  window.requestAnimationFrame(hover_Objects);
-
-
-  // SCREEN SIZE HANDLING
-
-  //rendering to the size of the client canvas
-  function resizeRendererToDisplaySize(renderer) {
-    const canvas = renderer.domElement;
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    const needResize = canvas.width !== width || canvas.height !== height;
-    if (needResize) {
-      renderer.setSize(width, height, false);
-    }
-    return needResize;
-  }
-
-  // render the forms with higher pixel
- function render(time) {
-   time *= 0.001;
-
-   if (resizeRendererToDisplaySize(renderer)) {
-     const canvas = renderer.domElement;
-     camera.aspect = canvas.clientWidth / canvas.clientHeight;
-     camera.updateProjectionMatrix();
-   }
-
-   renderer.render(scene, camera);
-   // need this for the scene not to become squished or elongated
-   requestAnimationFrame(render);
-
- }
- requestAnimationFrame(render);
+  window.requestAnimationFrame(animate);
 
 }
+
+let raycaster = new THREE.Raycaster();
+let mouse = new THREE.Vector2();
+let selected_Object;
+
+function mouseMove(event){
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+}
+
+function reset_Objects(){
+  for (let b = 0; b < scene.children.length; b++){
+    if(scene.children[b].material){
+      scene.children[b].material.opacity = scene.children[b].userData.currentSquare == selected_Object ? 0.5 : 1.0;
+    }
+  }
+}
+
+function hover_Objects() {
+
+// update the picking ray with the camera and mouse position
+raycaster.setFromCamera( mouse, camera );
+// calculate objects intersecting the picking ray
+const intersects = raycaster.intersectObjects( scene.children );
+
+for ( let a = 0; a < intersects.length; a ++ ) {
+  intersects[ a ].object.material.transparent = true;
+  intersects[ a ].object.material.opacity = 0.5;
+}
+renderer.render( scene, camera );
+
+}
+
+function onClick(event){
+  raycaster.setFromCamera( mouse, camera );
+
+  let intersects = raycaster.intersectObjects( scene.children );
+  if (intersects.length > 0){
+    selected_Object = intersects[0].object.userData.currentSquare;
+  }
+}
+
+window.addEventListener( 'mousemove', mouseMove, false );
+window.addEventListener( 'click', onClick );
+
+
+window.requestAnimationFrame(hover_Objects);
+
+
+function animate() {
+   controls.update();
+   renderer.render(scene, camera);
+   window.requestAnimationFrame(animate);
+
+   hover_Objects();
+   reset_Objects();
+
+ }
+
+
+ // SCREEN SIZE HANDLING
+
+ //rendering to the size of the client canvas
+ function resizeRendererToDisplaySize(renderer) {
+   const canvas = renderer.domElement;
+   const width = canvas.clientWidth;
+   const height = canvas.clientHeight;
+   const needResize = canvas.width !== width || canvas.height !== height;
+   if (needResize) {
+     renderer.setSize(width, height, false);
+   }
+   return needResize;
+ }
+
+ // render the forms with higher pixel
+function render(time) {
+  time *= 0.001;
+
+  if (resizeRendererToDisplaySize(renderer)) {
+    const canvas = renderer.domElement;
+    camera.aspect = canvas.clientWidth / canvas.clientHeight;
+    camera.updateProjectionMatrix();
+  }
+
+  renderer.render(scene, camera);
+  // need this for the scene not to become squished or elongated
+  requestAnimationFrame(render);
+
+}
+requestAnimationFrame(render);
