@@ -5,13 +5,13 @@ import * as THREE from 'https://unpkg.com/three/build/three.module.js';
 import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/controls/OrbitControls.js';
 // to add gravity to the object
 
-import * as CANNON from 'https://unpkg.com/cannon-es@0.17.1/dist/cannon-es.js'
+//import C from 'https://unpkg.com/cannon-es@0.17.1/dist/cannon-es.js'
 
 
 // 3D sketch
-main();
+init();
 
-function main() {
+function init() {
   //put the js file in the canvas
  const canvas = document.querySelector('#c');
  const renderer = new THREE.WebGLRenderer({canvas});
@@ -53,12 +53,13 @@ function main() {
   const timeStep = 1 / 60 // seconds
   let lastCallTime
 
-  function animate() {
+ function animate() {
     controls.update();
     renderer.render(scene, camera);
     window.requestAnimationFrame(animate);
-    // for object who has been hovered
-    hover_Object()
+
+    hover_Objects();
+
   }
 
 
@@ -109,13 +110,6 @@ function main() {
      wireframe : true
 
    });
-
-   // const groundBody = new CANNON.Body({
-   //   type : Body.STATIC,
-   //   shape : new CANNON.Plane(),
-   // })
-   // groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0); // make it face up
-   // world.addBody(groundBody);
 
  var PlaneFloorGeometry = new THREE.PlaneGeometry( 100, 100, 100, 100 );
  var FloorMesh = new THREE.Mesh(PlaneFloorGeometry, materialFloor);
@@ -213,7 +207,6 @@ function main() {
   scene.add(UserMesh);
 
 
-
   // Here The object are created
   const object_name = [];
   const object_room = [];
@@ -222,6 +215,8 @@ function main() {
   const object_category= [];
 
   let i = 1;
+
+  object_creation()
 
 
   async function get_Data(){
@@ -334,33 +329,21 @@ function main() {
    creation_of_object(){
 
      this.color();
-
      this.position();
 
-     // const square_Object = new CANNON.Body({
-     //   mass : 5,
-     //   shape : new CANNON.Sphere(1),
-     // })
-     //
-     // square_Object.position.set(this.x_position, this.y_position, this.z_position);
-     // world.addBody(square_Object);
+     const geometry = new THREE.BoxGeometry(0.2/*radius*/, 0.2/*widthsegment*/, 0.2/*height Segments*/);
+     const material = new THREE.MeshLambertMaterial({color : this.color});
 
+     this.Object = new THREE.Mesh(geometry, material);
+     this.Object.position.set(this.x_position, this.y_position + (0.2*this.i),this.z_position)
 
-     this.object_material = new THREE.MeshLambertMaterial({
-       color : this.color,
-     });
-     this.object_geometry = new THREE.BoxGeometry(0.2/*radius*/, 0.2/*widthsegment*/, 0.2/*height Segments*/);
-     this.object_mesh = new THREE.Mesh(this.object_geometry, this.object_material);
-     // give it a position
-     this.object_mesh.position.x = this.x_position;
-     this.object_mesh.position.y = this.y_position + (0.2*this.i);
-     this.object_mesh.position.z = this.z_position;
+     scene.add(this.Object);
 
-     scene.add(this.object_mesh);
-     this.object_mesh.userData.draggable = true;
-     this.object_mesh.userData.name = this.name[this.i];
-
+     this.Object.userData.draggable = true;
+     this.Object.userData.name = this.name[this.i];
+     console.log(this.Object.userData.name);
    }
+
   }
 
   async function object_creation(){
@@ -370,57 +353,33 @@ function main() {
         let Object_creation = new object(i, object_name, object_room, object_number_of_item, object_link_to_me, object_category);
 
         Object_creation.creation_of_object();
+    }
 
-      }
   }
 
-  object_creation()
 
 
-  const raycaster = new THREE.Raycaster();
-  const mouse = new THREE.Vector2();
-  /*const moveMouse = new THREE.Vector2();
-  var draggable = THREE.Object3D;
 
-  window.addEventListener('click', event=>{
-  if(draggable){
-    console.log('object is not dragged anymore')
-    draggable = null as any
-    return;
-  }
-  console.log('click events works')
-  clickMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  clickMouse.y = - (event.clientY / window.innerHeight) * 2 -1;
+  let raycaster = new THREE.Raycaster();
+  let mouse = new THREE.Vector2()
 
-
-  raycaster.setFromCamera( clickMouse, camera);
-  const found = raycaster.intersectObjects(scene.children);
-
-  if (found.length > 0 && found[0].object.userData.draggable){
-    draggable = found[0].object;
-    console.log('found draggable')
-  }
-  })*/
-
-  function onMouseMove(){
-
+  function mouseMove(event){
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = - (event.clientY / window.innerHeight) * 2 -1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
   }
 
-  function hover_Object() {
+  function hover_Objects() {
 
 	// update the picking ray with the camera and mouse position
 	raycaster.setFromCamera( mouse, camera );
+
 	// calculate objects intersecting the picking ray
 	const intersects = raycaster.intersectObjects( scene.children );
- console.log(intersects)
-	for ( let intersected = 0; intersected < intersects.length; intersected ++ ) {
-    console.log('for loop is working')
-		//intersects[ intersected ].object.material.transparent = true;
-    //intersects[ intersected ].object.material.opacity = 0.5;
 
-  //  console.log(userData.name);
+	for ( let a = 0; a < intersects.length; a ++ ) {
+
+		intersects[ a ].object.material.color.set( 0xff0000 );
+
 	}
 
 	renderer.render( scene, camera );
@@ -429,12 +388,10 @@ function main() {
 
   window.addEventListener( 'mousemove', onMouseMove, false );
 
+  window.requestAnimationFrame(hover_Objects);
 
 
-
-
-
-
+  // SCREEN SIZE HANDLING
 
   //rendering to the size of the client canvas
   function resizeRendererToDisplaySize(renderer) {
@@ -459,6 +416,8 @@ function main() {
    }
 
    renderer.render(scene, camera);
+   // need this for the scene not to become squished or elongated
+   requestAnimationFrame(render);
 
  }
  requestAnimationFrame(render);
