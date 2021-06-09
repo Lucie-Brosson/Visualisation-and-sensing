@@ -8,11 +8,10 @@ html, body {
 }
 
 body{
-  background-color: #3D4143;
   overflow: hidden;
-  color:#EEEEEE;
+  color: black;
   font-family:Arial;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 #canvas {

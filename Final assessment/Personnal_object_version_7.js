@@ -1,4 +1,4 @@
-console.log("helloo I am preinting")
+console.log("js is working")
 
 import * as THREE from 'https://unpkg.com/three/build/three.module.js';
 // to move the camera
@@ -6,16 +6,14 @@ import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/contro
 // to move object
 import {DragControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/controls/DragControls.js'
 // to add gravity to the object
-
-//import'https://cdnjs.cloudflare.com/ajax/libs/oimo/1.0.9/oimo.min.js'
-
-//import C from 'https://unpkg.com/cannon-es@0.17.1/dist/cannon-es.js'
+import * as CANNON from 'https://unpkg.com/cannon-es@0.17.1/dist/cannon-es.js'
 
 
 // 3D sketch
 init();
 
-var scene, camera, renderer, controls, object_Storage, drag_controls;
+var scene, camera, renderer, controls, object_Storage, Object_gravity_storage, drag_controls, Object_creation,  UserMesh, sphereBody, world, ground, object_physics;
+
 var name = '';
 
 const object_name = [];
@@ -23,6 +21,13 @@ const object_room = [];
 const object_number_of_item = [];
 const object_link_to_me = [];
 const object_category= [];
+
+
+// Animation
+const timeStep = 1 / 60 // seconds
+let lastCallTime
+
+
 
 function init() {
   //put the js file in the canvas
@@ -56,7 +61,7 @@ camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
  // dragControls.addEventListener( 'dragend', function () { orbitControls.enabled = true; } );
 
 
- controls = new OrbitControls(camera, renderer.domElement);
+  controls = new OrbitControls(camera, renderer.domElement);
 
   controls.target.set(4.5, 0, 4.5);
 
@@ -65,8 +70,6 @@ camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
   controls.enableDamping = true;
 
-  const timeStep = 1 / 60 // seconds
-  let lastCallTime
 
 
 // create a new scene
@@ -104,11 +107,20 @@ camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 */
  // add music
 
-
+ // physics world
+  world = new CANNON.World({
+   gravity: new CANNON.Vec3(0, -9.82, 0), // m/s²
+ })
 
 
 // From this point the code is generating object (the plan, the delimitation of the ground, ect)
  // plane - floor
+ ground = new CANNON.Body({
+  mass: 0,
+  shape: new CANNON.Plane(),
+})
+ground.quaternion.setFromEuler(-Math.PI / 2, -1, 0) // make it face up
+world.addBody(ground)
 
  var materialFloor = new THREE.MeshLambertMaterial({
      color:0x44aa88,
@@ -198,11 +210,19 @@ camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
   // User character
 
+  const radius = 0.6 // m
+  sphereBody = new CANNON.Body({
+  mass: 5, // kg
+  shape: new CANNON.Sphere(radius),
+  })
+  sphereBody.position.set(0, 10, 0) // m
+  world.addBody(sphereBody)
+
   const UserMaterial = new THREE.MeshLambertMaterial({
    color : 0xf589f3,
   });
   const Usergeometry = new THREE.SphereGeometry(0.6/*radius*/, 14/*widthsegment*/, 14/*height Segments*/);
-  const UserMesh = new THREE.Mesh(Usergeometry, UserMaterial);
+  UserMesh = new THREE.Mesh(Usergeometry, UserMaterial);
 
   // Make the character move and make the camera follow it
 
@@ -216,6 +236,7 @@ camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
   // Here The object are created
 
   object_Storage = new THREE.Group();
+  Object_gravity_storage = new THREE.Group();
 
   let i = 1;
 
@@ -240,7 +261,7 @@ camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
    })
   }
 
-  class object {
+  class object_class {
    //this class define each object
    constructor(){
      this.i = i;
@@ -327,6 +348,18 @@ camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
    }
 
+   object_gravity(){
+     this.position();
+
+      this.object_physics = new CANNON.Body({
+       mass : 2,
+       position : new CANNON.Vec3(this.x_position, this.y_position + (0.2*this.i), this.z_position),
+       shape: new CANNON.Box(0.2,0.2,0.2),
+     })
+
+     world.addBody(object_physics);
+   }
+
    creation_of_object(){
 
      this.color();
@@ -336,14 +369,10 @@ camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
      const material = new THREE.MeshLambertMaterial({color : this.color});
 
      this.Object = new THREE.Mesh(geometry, material);
-     this.Object.position.set(this.x_position, this.y_position + (0.2*this.i),this.z_position)
 
      this.Object.userData.draggable = true;
      this.Object.userData.name = this.name[this.i];
      this.Object.userData.current_Object = this.i;
-
-
-     console.log(this.Object.userData.name);
    }
   }
 
@@ -353,11 +382,13 @@ camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
     await get_Data();
 
     for (i=1; i< object_name.length; i++){
-        let Object_creation = new object(i, object_name, object_room, object_number_of_item, object_link_to_me, object_category);
+         Object_creation = new object_class(i, object_name, object_room, object_number_of_item, object_link_to_me, object_category);
 
         Object_creation.creation_of_object();
-
         object_Storage.add(Object_creation.Object);
+
+        Object_creation.object_gravity();
+        Object_gravity_storage.add(Object_creation.object_physics);
     }
   }
   scene.add(object_Storage);
@@ -404,6 +435,9 @@ function onClick(event){
     selected_Object = intersects[0].object.userData.current_Object;
     console.log(object_name[selected_Object])
     document.getElementById("paragraph_Object_Name").innerHTML = object_name[selected_Object];
+    document.getElementById("paragraph_Object_Room").innerHTML = object_room[selected_Object];
+
+    return;
 
   }
 
@@ -414,9 +448,12 @@ window.addEventListener( 'mousemove', mouseMove, false );
 window.addEventListener( 'click', onClick );
 window.requestAnimationFrame(hover_Objects);
 
+
+
 //ANiMATE SCENE
 
 function animate() {
+
    controls.update();
 
    renderer.render(scene, camera);
@@ -424,6 +461,31 @@ function animate() {
 
    hover_Objects();
    reset_Objects();
+
+   ground.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
+
+  // for (let z = 0 ; z < object_Storage.length ; z++){
+
+      object_Storage.position.copy(Object_gravity_storage.getPosition());
+      object_Storage.quaternion.copy(Object_gravity_storage.getQuaternion() );
+
+
+   UserMesh.position.copy(sphereBody.position);
+   UserMesh.quaternion.copy(sphereBody.quaternion);
+
+
+
+   //object_Storage.Object.position.copy(object_physics.getPosition());
+   //object_Storage.Object.quaternion.copy(object_physics.getQuaternion() );
+
+   const time = performance.now() / 1000; // seconds
+   if (!lastCallTime) {
+    world.step(timeStep);
+   } else {
+    const dt = time - lastCallTime;
+    world.step(timeStep, dt);
+   }
+   lastCallTime = time;
 }
 
 
