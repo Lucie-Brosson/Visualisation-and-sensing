@@ -3,7 +3,11 @@ console.log("helloo I am preinting")
 import * as THREE from 'https://unpkg.com/three/build/three.module.js';
 // to move the camera
 import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/controls/OrbitControls.js';
+// to move object
+import {DragControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/controls/DragControls.js'
 // to add gravity to the object
+
+//import'https://cdnjs.cloudflare.com/ajax/libs/oimo/1.0.9/oimo.min.js'
 
 //import C from 'https://unpkg.com/cannon-es@0.17.1/dist/cannon-es.js'
 
@@ -11,7 +15,7 @@ import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/contro
 // 3D sketch
 init();
 
-var scene, camera, renderer, controls, object_Storage;
+var scene, camera, renderer, controls, object_Storage, drag_controls;
 var name = '';
 
 const object_name = [];
@@ -22,7 +26,7 @@ const object_category= [];
 
 function init() {
   //put the js file in the canvas
- const canvas = document.querySelector('#c');
+ const canvas = document.querySelector('#canvas');
  renderer = new THREE.WebGLRenderer({canvas});
 //set the color of the background
  renderer.setClearColor(0xf5d5d3);
@@ -43,6 +47,13 @@ camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
  camera.position.z = 10;
 
 
+ // const dragControls = new DragControls( object_Storage, camera, renderer.domElement );
+ //
+ // dragControls.addEventListener( 'dragstart', function () { orbitControls.enabled = false; } );
+ //
+ // dragControls.addEventListener( 'drag', onDragEvent );
+ //
+ // dragControls.addEventListener( 'dragend', function () { orbitControls.enabled = true; } );
 
 
  controls = new OrbitControls(camera, renderer.domElement);
@@ -205,6 +216,7 @@ camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
   // Here The object are created
 
   object_Storage = new THREE.Group();
+
   let i = 1;
 
   object_creation()
@@ -346,15 +358,11 @@ camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
         Object_creation.creation_of_object();
 
         object_Storage.add(Object_creation.Object);
-
-
-
-
     }
   }
   scene.add(object_Storage);
 
-}
+} // end of init
 
 let raycaster = new THREE.Raycaster();
 let mouse = new THREE.Vector2();
@@ -401,6 +409,7 @@ function onClick(event){
 
 }
 
+
 window.addEventListener( 'mousemove', mouseMove, false );
 window.addEventListener( 'click', onClick );
 window.requestAnimationFrame(hover_Objects);
@@ -409,6 +418,7 @@ window.requestAnimationFrame(hover_Objects);
 
 function animate() {
    controls.update();
+
    renderer.render(scene, camera);
    window.requestAnimationFrame(animate);
 
