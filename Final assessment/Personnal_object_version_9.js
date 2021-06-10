@@ -1,6 +1,8 @@
 console.log("js is working")
 
 import * as THREE from 'https://unpkg.com/three/build/three.module.js';
+//text to mesh
+import ThreeMeshUI from 'https://cdn.skypack.dev/three-mesh-ui';
 // to move the camera
 import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/controls/OrbitControls.js';
 // to move object
@@ -10,7 +12,7 @@ import * as CANNON from 'https://unpkg.com/cannon-es@0.17.1/dist/cannon-es.js'
 
 
 // 3D sketch
-init();
+
 
 var scene, camera, renderer, controls, object_Storage, Object_gravity_storage, drag_controls, Object_creation,  UserMesh, sphereBody, world, ground, object_physics;
 
@@ -175,39 +177,6 @@ world.addBody(ground)
  scene.add(KitchenMesh);
 
 
-  //pedestal for my favorite object
-
-  const Pedestal1Material = new THREE.MeshLambertMaterial({
-   color : 0xf589f3,
-  });
-  const Pedestal1geometry = new THREE.BoxGeometry(0.75/*boxWidth*/, 3/*boxHeight*/, 0.75/*boxDepth*/);
-  const Pedestal1Mesh = new THREE.Mesh(Pedestal1geometry, Pedestal1Material);
-  Pedestal1Mesh.position.x = -11;
-  Pedestal1Mesh.position.z = 0;
-
-  scene.add(Pedestal1Mesh);
-
-  const Pedestal2Material = new THREE.MeshLambertMaterial({
-   color : 0xf589f3,
-  });
-  const Pedestal2geometry = new THREE.BoxGeometry(0.75/*boxWidth*/, 2.5/*boxHeight*/, 0.75/*boxDepth*/);
-  const Pedestal2Mesh = new THREE.Mesh(Pedestal2geometry, Pedestal2Material);
-  Pedestal2Mesh.position.x = -11;
-  Pedestal2Mesh.position.z = -1;
-
-  scene.add(Pedestal2Mesh);
-
-  const Pedestal3Material = new THREE.MeshLambertMaterial({
-   color : 0xf589f3,
-  });
-  const Pedestal3geometry = new THREE.BoxGeometry(0.75/*boxWidth*/, 2/*boxHeight*/, 0.75/*boxDepth*/);
-  const Pedestal3Mesh = new THREE.Mesh(Pedestal3geometry, Pedestal3Material);
-  Pedestal3Mesh.position.x = -11;
-  Pedestal3Mesh.position.z = 1;
-
-  scene.add(Pedestal3Mesh);
-
-
   // User character
 
   const radius = 0.6 // m
@@ -225,7 +194,6 @@ world.addBody(ground)
   UserMesh = new THREE.Mesh(Usergeometry, UserMaterial);
 
   // Make the character move and make the camera follow it
-
   UserMesh.position.x = 1;
   UserMesh.position.z = 1;
   UserMesh.position.y = 1;
@@ -236,7 +204,7 @@ world.addBody(ground)
   // Here The object are created
 
   object_Storage = new THREE.Group();
-  Object_gravity_storage = new THREE.Group();
+  Object_gravity_storage = [];
 
   let i = 1;
 
@@ -245,7 +213,7 @@ world.addBody(ground)
   async function get_Data(){
     // CSV Data handling
     // take the data from the CSV file and push into the array above
-   const response = await fetch('./test.csv');
+   const response = await fetch('./Life_data.csv');
    const data = await response.text();
 
    console.log('get data is working');
@@ -302,12 +270,12 @@ world.addBody(ground)
      if ((this.room[this.i] === "Bathroom ") || (this.room[this.i] === "Bathroom") || (this.room[this.i] === "bathroom ") || (this.room[this.i] === "bathroom")){
        this.x_position = -5 ;
        this.y_position =  1;
-       this.z_position =  -10;
+       this.z_position =  5;
      }
      if ((this.room[this.i] === "Kitchen ") || (this.room[this.i] === "Kitchen") || (this.room[this.i] === "kitchen ") || (this.room[this.i] === "kitchen")){
        this.x_position =  -9.5;
        this.y_position =  1;
-       this.z_position =  5;
+       this.z_position =  -10;
      }
      if ((this.room[this.i] === "Other ") || (this.room[this.i] === "Other") || (this.room[this.i] === "other ") || (this.room[this.i] === "other")){
        this.x_position =  5;
@@ -317,17 +285,17 @@ world.addBody(ground)
 
    }
 
-   color(){
+   colour(){
      // give the object a color in function of my relationship to it
       this.color = "rgb(255,255,255)"
 
       if (this.link_to_me[this.i] == "1"){
         // my favorite object
-        this.color =  "rgb(243,247,0)"
+        this.color =  "rgb(246, 252, 68)"
       }
       if (this.link_to_me[this.i] == "2"){
         // object that I need or like a lot
-        this.color =  "rgb(247, 157, 0)"
+        this.color =  "rgb(255, 136, 0)"
       }
       if (this.link_to_me[this.i] == "3"){
         //object that I need sometimes or I like having them around
@@ -339,30 +307,22 @@ world.addBody(ground)
       }
       if (this.link_to_me[this.i]  == "5"){
         // stock of object - I will use it at some point
-        this.color = "rgb(0, 235, 247)"
+        this.color = "rgb(161, 18, 222)"
       }
       if (this.link_to_me[this.i]  == "6"){
+        // stock of object - I will use it at some point
+        this.color = "rgb(0, 235, 247)"
+      }
+      if (this.link_to_me[this.i]  == "7"){
         // Object I would like to get ride out and are a weight to me
         this.color =  "rgb(0,0,0)"
       }
 
    }
 
-   object_gravity(){
-     this.position();
-
-      this.object_physics = new CANNON.Body({
-       mass : 2,
-       position : new CANNON.Vec3(this.x_position, this.y_position + (0.2*this.i), this.z_position),
-       shape: new CANNON.Box(0.2,0.2,0.2),
-     })
-
-     world.addBody(object_physics);
-   }
-
    creation_of_object(){
 
-     this.color();
+     this.colour();
      this.position();
 
      const geometry = new THREE.BoxGeometry(0.2/*radius*/, 0.2/*widthsegment*/, 0.2/*height Segments*/);
@@ -370,13 +330,35 @@ world.addBody(ground)
 
      this.Object = new THREE.Mesh(geometry, material);
 
+     this.Object.position.set(this.x_position, this.y_position + (0.35*this.i),this.z_position)
+
      this.Object.userData.draggable = true;
      this.Object.userData.name = this.name[this.i];
      this.Object.userData.current_Object = this.i;
    }
+
+   object_gravity(){
+     this.position();
+
+      this.object_physics = new CANNON.Body({
+       mass : 2,
+       shape: new CANNON.Box(new CANNON.Vec3(0.2,0.2,0.2)),
+     })
+
+     world.addBody(this.object_physics);
+   }
+
+   object_animation(){
+     this.creation_of_object();
+     this.object_gravity();
+
+     renderer.render(scene, camera);
+     requestAnimationFrame(this.object_animation.bind(this));
+
+     this.Object.position.copy(this.object_physics.position);
+     this.Object.quaternion.copy(this.object_physics.quaternion);
   }
-
-
+}
 
   async function object_creation(){
     await get_Data();
@@ -387,13 +369,15 @@ world.addBody(ground)
         Object_creation.creation_of_object();
         object_Storage.add(Object_creation.Object);
 
-        Object_creation.object_gravity();
-        Object_gravity_storage.add(Object_creation.object_physics);
     }
   }
+
+
   scene.add(object_Storage);
 
-} // end of init
+
+}
+ // end of init
 
 let raycaster = new THREE.Raycaster();
 let mouse = new THREE.Vector2();
@@ -431,11 +415,18 @@ function onClick(event){
 
   let intersects = raycaster.intersectObjects( object_Storage.children );
 
+
+
   if (intersects.length > 0){
     selected_Object = intersects[0].object.userData.current_Object;
     console.log(object_name[selected_Object])
-    document.getElementById("paragraph_Object_Name").innerHTML = object_name[selected_Object];
-    document.getElementById("paragraph_Object_Room").innerHTML = object_room[selected_Object];
+
+    document.getElementById("message").innerHTML = "";
+
+    document.getElementById("paragraph_Object_Room").innerHTML = "object room : " + object_room[selected_Object];
+    document.getElementById("paragraph_Object_Name").innerHTML = "object name : " + object_name[selected_Object];
+    document.getElementById("paragraph_Object_Category").innerHTML = "object category : " + object_category[selected_Object];
+    paragraph_Object_Category
 
     return;
 
@@ -455,6 +446,7 @@ window.requestAnimationFrame(hover_Objects);
 function animate() {
 
    controls.update();
+   ThreeMeshUI.update();
 
    renderer.render(scene, camera);
    window.requestAnimationFrame(animate);
@@ -464,19 +456,8 @@ function animate() {
 
    ground.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
 
-  // for (let z = 0 ; z < object_Storage.length ; z++){
-
-      object_Storage.position.copy(Object_gravity_storage.getPosition());
-      object_Storage.quaternion.copy(Object_gravity_storage.getQuaternion() );
-
-
    UserMesh.position.copy(sphereBody.position);
    UserMesh.quaternion.copy(sphereBody.quaternion);
-
-
-
-   //object_Storage.Object.position.copy(object_physics.getPosition());
-   //object_Storage.Object.quaternion.copy(object_physics.getQuaternion() );
 
    const time = performance.now() / 1000; // seconds
    if (!lastCallTime) {
@@ -519,3 +500,5 @@ requestAnimationFrame(render);
 
 }
 requestAnimationFrame(render);
+
+init();
