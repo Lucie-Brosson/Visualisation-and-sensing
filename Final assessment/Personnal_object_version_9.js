@@ -1,8 +1,6 @@
-console.log("js is working")
+// this is the main file of the object life project. I used the THREE.js library and the CANNON es library to create this sketch. In it I wanted to show our relationship with object and how we relate to it. Unfortunatly I wasn't able to complete this projects as I struggled with giving the cubes gravity. I hope you will enjoy it nonetheless.
 
 import * as THREE from 'https://unpkg.com/three/build/three.module.js';
-//text to mesh
-import ThreeMeshUI from 'https://cdn.skypack.dev/three-mesh-ui';
 // to move the camera
 import {OrbitControls} from 'https://unpkg.com/three@0.119.0/examples/jsm/controls/OrbitControls.js';
 // to move object
@@ -13,22 +11,19 @@ import * as CANNON from 'https://unpkg.com/cannon-es@0.17.1/dist/cannon-es.js'
 
 // 3D sketch
 
-
+//global variable
 var scene, camera, renderer, controls, object_Storage, Object_gravity_storage, drag_controls, Object_creation,  UserMesh, sphereBody, world, ground, object_physics;
 
-var name = '';
-
+// object variable
 const object_name = [];
 const object_room = [];
 const object_number_of_item = [];
 const object_link_to_me = [];
 const object_category= [];
 
-
 // Animation
 const timeStep = 1 / 60 // seconds
 let lastCallTime
-
 
 
 function init() {
@@ -49,23 +44,14 @@ function init() {
 camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
  //camera position
- camera.position.y = 5;
- camera.position.x = -1;
+ camera.position.y = 6;
+ camera.position.x = -5;
  camera.position.z = 10;
-
-
- // const dragControls = new DragControls( object_Storage, camera, renderer.domElement );
- //
- // dragControls.addEventListener( 'dragstart', function () { orbitControls.enabled = false; } );
- //
- // dragControls.addEventListener( 'drag', onDragEvent );
- //
- // dragControls.addEventListener( 'dragend', function () { orbitControls.enabled = true; } );
 
 
   controls = new OrbitControls(camera, renderer.domElement);
 
-  controls.target.set(4.5, 0, 4.5);
+  controls.target.set(0, 2, 4.5);
 
   controls.enablePan = false;
   controls.maxPolarAngle = Math.PI / 2;
@@ -93,7 +79,7 @@ camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
 
  // Music and sound of the Scene
-/*
+
  const listener = new THREE.AudioListener();
  camera.add( listener );
 
@@ -106,14 +92,12 @@ camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 	sound.setVolume( 0.05 );
 	sound.play();
  });
-*/
- // add music
+
 
  // physics world
   world = new CANNON.World({
    gravity: new CANNON.Vec3(0, -9.82, 0), // m/s²
  })
-
 
 // From this point the code is generating object (the plan, the delimitation of the ground, ect)
  // plane - floor
@@ -177,7 +161,7 @@ world.addBody(ground)
  scene.add(KitchenMesh);
 
 
-  // User character
+  //I use this object to show the potential gravity the cubes could have had
 
   const radius = 0.6 // m
   sphereBody = new CANNON.Body({
@@ -209,7 +193,7 @@ world.addBody(ground)
   let i = 1;
 
   object_creation()
-
+// this function get the data from the CSV file
   async function get_Data(){
     // CSV Data handling
     // take the data from the CSV file and push into the array above
@@ -228,7 +212,7 @@ world.addBody(ground)
      object_category.push(columns[4]);
    })
   }
-
+// this class specified the different element of the object
   class object_class {
    //this class define each object
    constructor(){
@@ -359,7 +343,7 @@ world.addBody(ground)
      this.Object.quaternion.copy(this.object_physics.quaternion);
   }
 }
-
+//this function then create the object and store it into a THREE.js group
   async function object_creation(){
     await get_Data();
 
@@ -371,11 +355,8 @@ world.addBody(ground)
 
     }
   }
-
-
+// the objects are then added to the scene
   scene.add(object_Storage);
-
-
 }
  // end of init
 
@@ -383,7 +364,7 @@ let raycaster = new THREE.Raycaster();
 let mouse = new THREE.Vector2();
 let selected_Object;
 
-
+// In the function bellow, the activity of the mouse is tracked and the sketch respond to it
 function mouseMove(event){
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -415,14 +396,13 @@ function onClick(event){
 
   let intersects = raycaster.intersectObjects( object_Storage.children );
 
-
-
   if (intersects.length > 0){
     selected_Object = intersects[0].object.userData.current_Object;
     console.log(object_name[selected_Object])
-
+    // remove the message once a cube is clicked
     document.getElementById("message").innerHTML = "";
 
+    //get the informations of the cube and show them to the user
     document.getElementById("paragraph_Object_Room").innerHTML = "object room : " + object_room[selected_Object];
     document.getElementById("paragraph_Object_Name").innerHTML = "object name : " + object_name[selected_Object];
     document.getElementById("paragraph_Object_Category").innerHTML = "object category : " + object_category[selected_Object];
